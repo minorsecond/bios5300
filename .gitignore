@@ -35,3 +35,4 @@ vignettes/*.pdf
 # Everything in data directory
 **/Data/*
 **/Data/Raw/*
+.Rproj.user

@@ -4,7 +4,14 @@
 # library(forcats)
 library(Hmisc)
 library(classInt)
+library(dplyr)
+library(survey)
+library(srvyr)
+source("./Functions/tukey.R")
 options(survey.lonely.psu = "certainty")
+
+# Prompt to remove outliers. I did in my tests
+outlierKD(brfss, X_BMI5)
 
 # Add state names to DF
 state.codes$X_STATE <- state.codes$VALUE
@@ -30,6 +37,7 @@ brfss.survey1 <- brfss.survey1 %>%
          INCOME2 = car::recode(INCOME2, "1='<$10,000'; 2='<$15,000'; 3='<$20,000'; 4='<$25,000'; 5='<$35,000'; 6='<$50,000'; 7='<$75,000'; 8='>$75,000'; 77='DK/NS'; 99='Refused'"),
          INCOME2 = as.factor(INCOME2),
          SEX = car::recode(SEX, "1='Male'; 2='Female'; 9='NA'"),
+         SEX = as.factor(SEX),
          X_BMI5 = X_BMI5 / 100,
          EDUCA = car::recode(EDUCA, "1='Never attended school or only kindergarten'; 2='Grades 1 through 8 (Elementary) '; 3='Grades 9 through 11 (Some high school) '; 4='Grade 12 or GED (High school graduate) '; 5='College 1 year to 3 years (Some college or technical school)'; 6='College 4 years or more (College graduate) '; 9='Refused'"),
          EDUCA = as.factor(EDUCA),
@@ -37,6 +45,16 @@ brfss.survey1 <- brfss.survey1 %>%
          N.CHILDREN = as.factor(N.CHILDREN),
          GENHLTH = car::recode(GENHLTH, "1='Excellent'; 2='Very good'; 3='Good'; 4='Fair'; 5='Poor'; 7='DK/NS'; 9='Refused'"),
          GENHTL = as.factor(GENHLTH),
+         EXERCISE = car::recode(EXERANY2, "1=1; 2=0; 7=NA; 9=NA"),
+         EXERCISE = as.integer(EXERCISE),
+         DIFFWALK = car::recode(DIFFWALK, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
+         DIFFWALK = as.factor(DIFFWALK),
+         DIFFDRES = car::recode(DIFFDRES, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
+         DIFFDRES = as.factor(DIFFDRES),
+         DECIDE = car::recode(DECIDE, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
+         DECIDE = as.factor(DECIDE),
+         DIFFALON = car::recode(DIFFALON, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
+         DIFFALON = as.factor(DIFFALON),
          EXERANY2 = car::recode(EXERANY2, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
          EXERANY2 = as.factor(EXERANY2),
          SLEPTIM1 = car::recode(SLEPTIM1, "77='DK/NS'; 99 ='Refused'"),
@@ -66,15 +84,18 @@ brfss.survey1 <- brfss.survey1 %>%
          HEAVY.DRINKER = as.factor(HEAVY.DRINKER),
          SMOKER.STATUS = car::recode(X_SMOKER3, "1 = 'Current smoker - now smokes every day'; 2='Current smoker - now smokes some days'; 3='Former smoker'; 4='Never smoked'; 9='DK/Refused/Missing'"),
          SMOKER.STATUS = as.factor(SMOKER.STATUS),
+         SMOKE100 = car::recode(SMOKE100, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
+         SMOKE100 = as.factor(SMOKE100),
          HIGH.RISK = car::recode(HIVRISK4, "1='Yes'; 2='No'; 7='DK/NS'; 9='Refused'"),
          HIGH.RISK = as.factor(HIGH.RISK),
          DRINK.DRIVE = car::recode(X_DRNKDRV, "1='Have driven after having too much to drink'; 2='Have not driven after having too much to drink'; 9='DK/NS/Refused/Missing'"),
          DRINK.DRIVE = as.factor(DRINK.DRIVE))
 
 # Only keep the variables we need
-brfss.survey1 <- brfss.survey1[, c("X_LLCPWT", "X_STSTR", "X_PSU", "STATE", "IDATE", "RACE.ETH", "AGE.GROUP", "INCOME2", "SEX", "X_BMI5", "EDUCA", "N.CHILDREN","GENHLTH", "EXERANY2",
-                                   "SLEPTIM1", "ADDEPEV2","SATISFIED", "LSATISFY", "GOOD.HEALTH", "MENTHLTH", "DAYS.ENERGETIC", "DAYS.ANXIOUS", "DAYS.SAD", "DAYS.PHYS.PREVENTED",
-                                   "CVDSTRK3","MARITAL", "MARIJANA", "BINGE.DRINKER", "N.ALC.DRINKS.WEEK", "HEAVY.DRINKER", "SMOKER.STATUS", "HIGH.RISK", "DRINK.DRIVE")]
+brfss.survey1 <- brfss.survey1[, c("X_LLCPWT", "X_STSTR", "X_PSU", "STATE", "IDATE", "RACE.ETH", "AGE.GROUP", "INCOME2", "SEX", "X_BMI5", "EDUCA", "N.CHILDREN","GENHLTH", "EXERCISE",
+                                   "EXERANY2", "SLEPTIM1", "ADDEPEV2","SATISFIED", "LSATISFY", "GOOD.HEALTH", "MENTHLTH", "DAYS.ENERGETIC", "DAYS.ANXIOUS", "DAYS.SAD",
+                                   "DAYS.PHYS.PREVENTED", "CVDSTRK3","MARITAL", "MARIJANA", "BINGE.DRINKER", "N.ALC.DRINKS.WEEK", "HEAVY.DRINKER", "SMOKER.STATUS", "HIGH.RISK", 
+                                   "DRINK.DRIVE")]
 # Split variables into 5 groups using kmeans (faster than Jenks)
 seed=5
 breaks <- classIntervals(as.numeric(brfss.survey1$MARIJANA), n = 5, style="kmeans")$brks
