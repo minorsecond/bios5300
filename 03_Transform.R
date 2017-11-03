@@ -20,6 +20,7 @@ gc()
 # Remove unused columns
 brfss.survey1 <- brfss.survey1[ , -which(names(brfss.survey1) %in% c("X_STATE", "SEQNO", "VALUE"))]
 
+# Recode the BRFSS variables according to the codebook.
 brfss.survey1 <- brfss.survey1 %>%
   mutate(IDATE = as.Date(IDATE, "%m%d%Y"),
          RACE.ETH = car::recode(X_RACEGR3, "1='White only, Non-Hispanic'; 2='Black only, Non-Hispanic'; 3='Other race only, Non-Hispanic'; 4='Multiracial, Non-Hispanic'; 5='Hispanic'; 9='DK/US/Refused'"),
@@ -90,6 +91,11 @@ brfss.survey.design <- svydesign(
   strata=~X_STSTR, 
   weights=~X_LLCPWT, 
   data = brfss.survey1)
+
+#  Don't need these now. Save RAM.
+rm(brfss.survey1)
+rm(seed)
+rm(breaks)
 
 # Save the transformed data ----
 saveRDS(brfss.survey.design, "Data/transformed.rds")
