@@ -2,9 +2,11 @@
 # library(broom)
 # library(modelr)
 library(ggplot2)
+library(ggeffects)
 library(srvyr)
 library(survey)
 library(RColorBrewer)
+source("./Functions/pub_graphs.R")
 
 #Disable scientific notation
 options(scipen=999)
@@ -21,12 +23,8 @@ readRDS("Data/transformed.rds") -> brfss.survey.design
 # Relevel some of the factors so that the regression output is easier to interpret.
 brfss.survey.design$variables$sex <- relevel(brfss.survey.design$variables$sex, ref = "Male")
 brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
-#brfss.survey.design$variables$n.children <- relevel(brfss.survey.design$variables$n.children, ref = "No children in household")
 brfss.survey.design$variables$diag.depression <- relevel(brfss.survey.design$variables$diag.depression, ref = "No")
 brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
-#brfss.survey.design$variables$diff.walking <- relevel(brfss.survey.design$variables$diff.walking, ref = "No")
-#brfss.survey.design$variables$diff.errands.alone <- relevel(brfss.survey.design$variables$diff.errands.alone, ref = "No")
-#brfss.survey.design$variables$diff.walking <- relevel(brfss.survey.design$variables$diff.walking, ref = "No")
 brfss.survey.design$variables$race.eth <- relevel(brfss.survey.design$variables$race.eth, ref = "Other race only, Non-Hispanic")
 brfss.survey.design$variables$age.grp <- relevel(brfss.survey.design$variables$age.grp, ref = "Age 18 to 24")
 brfss.survey.design$variables$exercises.yn <- relevel(brfss.survey.design$variables$exercises.yn, ref = "No")
@@ -37,22 +35,7 @@ brfss.survey.design$variables$health.care.coverage.source <- relevel(brfss.surve
 brfss.survey.design$variables$time.since.care.coverage <- relevel(brfss.survey.design$variables$time.since.care.coverage, ref = "Never")
 brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$diabetes, ref = "No")
 
-# First one here is standard binomial model for surveys
-results$stroke.binom <- svyglm(diag.stroke ~ alc.heavy.drinker +  alc.binge + smoker.status + 
-                                 n.children + days.anxious + days.sad +
-                                 days.poor.mental.health + diag.depression + 
-                                 daily.sleep.hrs + exercises.yn + bmi + 
-                                 sex + veteran + race.eth + age.grp,
-                               brfss.survey.design, family = "binomial")
-
-# Calculate OR and 95% CI for estimate
-results$stroke.binom.ORCI <- exp(cbind(OR = coef(results$stroke.binom), confint(results$stroke.binom)))
-
-# Check phi to determine if we need to use the quasibinomial method (adds a dispersion paramter)
-results$phi.b <- sum(resid(results$stroke.binom, type = "pearson")^2) / df.residual(results$stroke.binom)
-
-# Quasibinomial method to use if phi is too large
-
+# Logistic regression on stroke diagnosis status
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
                                   days.anxious + diag.depression + diabetes + exercises.yn +
                                   daily.sleep.hrs + sex + edu.level + income + race.eth + age.grp,
@@ -110,26 +93,36 @@ results$box.anxious <- svyboxplot(days.anxious ~ diag.stroke, design = brfss.sur
 results$box.ndrinks.weekly <- svyboxplot(alc.n.drinks.weekly ~ diag.stroke, design = brfss.survey.design,
                                          col = brewer.pal(2, "Set3"), all.outliers = F,
                                          xlab = "Outcome", ylab = "Number of Drinks Weekly", main = "Number of Alcoholic Drinks Weekly and Stroke Outcome")
-# odds errorbar
-results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.binom, "age.grp"), aes(factor(x, 
-                                                                                         labels = c("18 to 24",
-                                                                                         "25 to 34",
-                                                                                         "** 35 to 44",
-                                                                                         "** 45 to 54",
-                                                                                         "** 55 to 64",
-                                                                                         "** 65+")), predicted)) +
+# Age Group & Stroke Probability Graph
+results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.binom, "age.grp"), 
+                                  aes(factor(x, labels = c("18 to 24",
+                                                           "25 to 34",
+                                                           "** 35 to 44",
+                                                           "** 45 to 54",
+                                                           "** 55 to 64",
+                                                           "** 65+")), 
+                                      predicted)) +
   geom_point() +
-  geom_errorbar(aes(min=conf.low, max=conf.high)) +
-  coord_flip() + 
-  theme_bw() +
-  ggtitle("AgeGr oup & Stroke Probability Estimate") +
-  labs(x="Age Group", y = "Stroke Probability", caption = "* - Significant at α=0.05\n** - Significant at α=0.01") +
-  theme(plot.title = element_text(hjust = .50), 
-        plot.caption = element_text(hjust=.95),
-        panel.border = element_blank(),
-        panel.grid.minor.y = element_blank())
-
-
+  geom_errorbar(aes(min=conf.low, 
+                    max=conf.high)) +
+  coord_flip() +
+  ggtitle("Age Group & Stroke Probability Estimate") +
+  labs(x="Age Group", y = "Stroke Probability", 
+       caption = "** - Significant at α=0.01") +
+  theme_Publication() +
+  scale_fill_Publication() +
+  scale_colour_Publication()
 
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
+
+# Save graphs to ./Output/Graphs
+ggsave("age_grp_prob.png", 
+       results$agegrp.odds.bar, 
+       device = "png", 
+       path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 10, 
+       height = 5, 
+       units="in")
