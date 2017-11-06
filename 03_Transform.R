@@ -73,11 +73,11 @@ brfss.survey1 <- brfss.survey1 %>%
          days.sad <- as.integer(days.sad),
          days.pain.prev.phys.act = car::recode(PAINACT2, "88='0'; 77='DK/NS'; 99=NA"),
          diag.stroke = car::recode(CVDSTRK3, "1=1; 2=0; 7=NA; 9=NA"),
-         diag.stroke = as.factor(diag.stroke),
+         diag.stroke = factor(diag.stroke, labels=c("No Stroke", "Stroke")),
          marital.status = car::recode(MARITAL, "1='Married'; 2='Divorced'; 3='Widowed'; 4='Separated'; 5='Never married'; 6='A member of an unmarried couple'; 9=NA"),
          marital.status = as.factor(marital.status),
          veteran = car::recode(VETERAN3, "1='Yes'; 2='No'; 7=NA; 9=NA"),
-         veteran = as.factor(veteran),
+         veteran = factor(veteran, labels = c("Non-Veteran", "Veteran")),
          days.use.marij = car::recode(MARIJANA, "77=NA; 88='0'; 99=NA"),
          days.use.marij <- as.integer(days.use.marij),
          alc.binge = car::recode(X_RFBING5, "1='Yyes'; 2='No'; 9=NA"),
@@ -98,21 +98,23 @@ brfss.survey1 <- brfss.survey1 %>%
          health.care.coverage.source = car::recode(HLTHCVR1, "1='Employer'; 2='Self'; 3='Medicare'; 4='Medicaid'; 5='TRICARE'; 6='Tribal Health Services'; 7='Other'; 8='No Coverage'; 77='DK/NS'; 99=NA"),
          health.care.coverage.source = as.factor(health.care.coverage.source),
          time.since.care.coverage = car::recode(LSTCOVRG, "1='<6 Months'; 2='Between 6 months and 1 year'; 3='Between 1 and 3 years'; 4='>3 Years'; 5='Never'; 7='DK/NS'; 9=NA"),
-         time.since.care.coverage = as.factor(time.since.care.coverage))
+         time.since.care.coverage = as.factor(time.since.care.coverage),
+         diabetes = car::recode(DIABETE3, "1='Yes'; 2='Yes, only during pregnancy'; 3='No'; 4='No - pre-diabetes'; 7='DK/NS'; 9=NA"),
+         diabetes = factor(diabetes))
 
 # Only keep the variables we need
 brfss.survey1 <- brfss.survey1[, c("X_LLCPWT", "X_STSTR", "X_PSU", "STATE", "interview.date", 
                                    "race.eth", "age.grp", "income", "sex", "bmi", "edu.level", 
                                    "n.children", "exercises.yn", "daily.sleep.hrs", "diag.depression", "diag.stroke",
                                    "days.poor.mental.health", "days.anxious", "days.sad", "days.pain.prev.phys.act",
-                                   "marital.status", "alc.binge", "alc.n.drinks.weekly", "days.use.marij",
+                                   "marital.status", "alc.binge", "alc.n.drinks.weekly", "days.use.marij", "diabetes",
                                    "alc.heavy.drinker", "smoker.status", "smoker.100.cigs.life", "current.cancer.treatment",
                                    "veteran", "diag.nonskin.cancer", "health.care.coverage.source", "time.since.care.coverage")]
 
 # Prompt to remove outliers.
 #$outlierKD(brfss.survey1, bmi)  # no
-#outlierKD(brfss.survey1, alc.n.drinks.weekly)  # no
-#outlierKD(brfss.survey1, as.integer(daily.sleep.hrs))  # yes
+outlierKD(brfss.survey1, alc.n.drinks.weekly)  # no
+outlierKD(brfss.survey1, as.integer(daily.sleep.hrs))  # yes
 
 
 # Split variables into 5 groups using kmeans (faster than Jenks)
