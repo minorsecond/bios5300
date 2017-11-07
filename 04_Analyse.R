@@ -7,6 +7,7 @@ library(srvyr)
 library(survey)
 library(RColorBrewer)
 source("./Functions/pub_graphs.R")
+options(survey.lonely.psu = "certainty")
 
 #Disable scientific notation
 options(scipen=999)
@@ -27,6 +28,7 @@ brfss.survey.design$variables$diag.depression <- relevel(brfss.survey.design$var
 brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
 brfss.survey.design$variables$race.eth <- relevel(brfss.survey.design$variables$race.eth, ref = "Other race only, Non-Hispanic")
 brfss.survey.design$variables$age.grp <- relevel(brfss.survey.design$variables$age.grp, ref = "Age 18 to 24")
+brfss.survey.design$variables$edu.level <- relevel(brfss.survey.design$variables$edu.level, ref = "Never attended school or only kindergarten")
 brfss.survey.design$variables$exercises.yn <- relevel(brfss.survey.design$variables$exercises.yn, ref = "No")
 brfss.survey.design$variables$veteran <- relevel(brfss.survey.design$variables$veteran, ref = "Non-Veteran")
 brfss.survey.design$variables$diag.nonskin.cancer <- relevel(brfss.survey.design$variables$diag.nonskin.cancer, ref = "No")
@@ -37,7 +39,7 @@ brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$
 
 # Logistic regression on stroke diagnosis status
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
-                                  days.anxious + diag.depression + diabetes + exercises.yn +
+                                  days.anxious + diag.depression + diabetes  +
                                   daily.sleep.hrs + sex + edu.level + income + race.eth + age.grp,
                                 brfss.survey.design, family = "quasibinomial")
 
@@ -52,16 +54,16 @@ results$kwallis.stroke.by.vet.status <- svyranktest(diag.stroke ~ veteran, desig
 
 # Summary statistics
 results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
-results$mean.sleep.by.outcome$ci <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="beta")
+results$mean.sleep.by.outcome$ci <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
-results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svymean, na.rm = T, na.rm = T)
-results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="beta")
+results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
+results$mean.bmi.by.outcome$ci <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
-results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svymean, na.rm = T, na.rm = T)
-results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="beta")
+results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
+results$mean.days.anxious.by.outcome$ci <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
-results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svymean, na.rm = T, na.rm = T)
-results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="beta")
+results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
+results$mean.n.drinks.weekly.by.outcome$ci <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
 
 # Two-way tables
@@ -94,13 +96,13 @@ results$box.ndrinks.weekly <- svyboxplot(alc.n.drinks.weekly ~ diag.stroke, desi
                                          col = brewer.pal(2, "Set3"), all.outliers = F,
                                          xlab = "Outcome", ylab = "Number of Drinks Weekly", main = "Number of Alcoholic Drinks Weekly and Stroke Outcome")
 # Age Group & Stroke Probability Graph
-results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.binom, "age.grp"), 
+results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, "age.grp"), 
                                   aes(factor(x, labels = c("18 to 24",
-                                                           "25 to 34",
-                                                           "** 35 to 44",
-                                                           "** 45 to 54",
-                                                           "** 55 to 64",
-                                                           "** 65+")), 
+                                                           "* 25 to 34",
+                                                           "* 35 to 44",
+                                                           "* 45 to 54",
+                                                           "* 55 to 64",
+                                                           "* 65+")), 
                                       predicted)) +
   geom_point() +
   geom_errorbar(aes(min=conf.low, 
@@ -108,9 +110,40 @@ results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.binom, "age.grp"),
   coord_flip() +
   ggtitle("Age Group & Stroke Probability Estimate") +
   labs(x="Age Group", y = "Stroke Probability", 
-       caption = "** - Significant at α=0.01") +
+       caption = "** - Significant at α=0.05") +
   theme_Publication() +
   scale_fill_Publication() +
+  scale_colour_Publication()
+
+# Depression diagnosis status Probability Graph
+results$depression.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, "diag.depression"), 
+                                  aes(factor(x, labels = c("No Depression Diagnosis", "Depression Diagnosis")), 
+                                      predicted)) +
+  geom_point() +
+  geom_errorbar(aes(min=conf.low, 
+                    max=conf.high)) +
+  coord_flip() +
+  ggtitle("Depression & Stroke Probability Estimate") +
+  labs(x="Depression Diagnosis", y = "Stroke Probability", 
+       caption = "** - Significant at α=0.05") +
+  theme_Publication() +
+  scale_fill_Publication() +
+  scale_colour_Publication()
+
+# Education level probability graph
+results$sleep.pred <- ggpredict(results$stroke.qbinom, terms = c("daily.sleep.hrs", "diag.depression"))
+results$sleep.pred$group <- car::recode(results$sleep.pred$group, "'No'='No Depression Diagnosis'; 'Yes'='Depression Diagnosis';")
+
+results$sleep.hrs.scatter <- ggplot(results$sleep.pred, 
+                                      aes(x, predicted, colour = group)) +
+  geom_point(show.legend = F) +
+  geom_line(show.legend = F) +
+  geom_ribbon(aes(ymin=conf.low, ymax=conf.high, linetype = NA), alpha = 0.15, show.legend = F) +
+  facet_wrap(~group) +
+  ggtitle("Depression Diagnosis & Stroke Probability Estimate") +
+  labs(x="Hours of Sleep", y = "Stroke Probability", 
+       caption = "") +
+  theme_Publication() +
   scale_colour_Publication()
 
 # Save the results object ----
@@ -125,4 +158,14 @@ ggsave("age_grp_prob.png",
        dpi = 300, 
        width = 10, 
        height = 5, 
+       units="in")
+
+ggsave("sleep_depression_prob.png", 
+       results$sleep.hrs.scatter, 
+       device = "png", 
+       path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 12, 
+       height = 8, 
        units="in")
