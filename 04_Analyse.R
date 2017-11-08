@@ -159,7 +159,10 @@ results$days.anxious.scatter <- ggplot(results$days.anxious.pred,
 #  Maps
 total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
 us_states$STATE <- as.factor(us_states$NAME)
+us_states <- merge(us_states, census, "STATE")
 us_states <- merge(us_states, total.strokes.by.state, "STATE")
+us_states <- na.omit(us_states)
+us_states$stroke.prevalence <- (us_states$diag.strokeStroke / us_states$Pop.2016) * 100000
   
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
