@@ -6,6 +6,7 @@ library(ggeffects)
 library(srvyr)
 library(survey)
 library(RColorBrewer)
+library(tigris)  # for state info
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -39,7 +40,7 @@ brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$
 
 # Logistic regression on stroke diagnosis status
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
-                                  days.anxious + diag.depression + diabetes  +
+                                  days.anxious + diag.depression + diabetes  + veteran +
                                   daily.sleep.hrs + sex + edu.level + income + race.eth + age.grp,
                                 brfss.survey.design, family = "quasibinomial")
 
@@ -53,17 +54,10 @@ results$kwallis.stroke.by.vet.status <- svyranktest(diag.stroke ~ veteran, desig
 # Tables ----
 
 # Summary statistics
-results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
-results$mean.sleep.by.outcome$ci <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-
-results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
-results$mean.bmi.by.outcome$ci <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-
-results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
-results$mean.days.anxious.by.outcome$ci <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-
-results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svymean, na.rm = T)
-results$mean.n.drinks.weekly.by.outcome$ci <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
+results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
+results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
+results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
+results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
 
 # Two-way tables
@@ -85,7 +79,7 @@ results$stroke.veteran.p <- prop.table(results$stroke.veteran, 1)
 results$stroke.depression <- na.omit(svytable(~diag.stroke + diag.depression, design = brfss.survey.design))
 colnames(results$stroke.depression) <- c("No Depression Diagnosis", "Depression Diagnosis")
 rownames(results$stroke.depression) <- c("No Stroke Diagnosis", "Stroke Diagnosis")
-results$stroke.depression.p <- prop.table(results$stroke.depression, 1)
+results$stroke.depression.p <- prop.table(results$stroke.depression, 2)
 
 # Plots ----
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, design = brfss.survey.design, col = brewer.pal(2, "Set3"), all.outliers = F,
@@ -140,12 +134,33 @@ results$sleep.hrs.scatter <- ggplot(results$sleep.pred,
   geom_line(show.legend = F) +
   geom_ribbon(aes(ymin=conf.low, ymax=conf.high, linetype = NA), alpha = 0.15, show.legend = F) +
   facet_wrap(~group) +
-  ggtitle("Depression Diagnosis & Stroke Probability Estimate") +
+  ggtitle("Average Hours of Sleep & Stroke Probability Estimate") +
   labs(x="Hours of Sleep", y = "Stroke Probability", 
        caption = "") +
   theme_Publication() +
   scale_colour_Publication()
 
+# Days anxious probability graph
+results$days.anxious.pred <- ggpredict(results$stroke.qbinom, terms = c("days.anxious", "diag.depression"))
+results$days.anxious.pred$group <- car::recode(results$days.anxious.pred$group, "'No'='No Depression Diagnosis'; 'Yes'='Depression Diagnosis';")
+
+results$days.anxious.scatter <- ggplot(results$days.anxious.pred, 
+                                    aes(x, predicted, colour = group)) +
+  geom_point(show.legend = F) +
+  geom_line(show.legend = F) +
+  geom_ribbon(aes(ymin=conf.low, ymax=conf.high, linetype = NA), alpha = 0.15, show.legend = F) +
+  facet_wrap(~group) +
+  ggtitle("Days Anxious & Stroke Probability Estimate") +
+  labs(x="Days Anxious in Past Month", y = "Stroke Probability", 
+       caption = "") +
+  theme_Publication() +
+  scale_colour_Publication()
+
+#  Maps
+total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
+us_states$STATE <- as.factor(us_states$NAME)
+us_states <- merge(us_states, total.strokes.by.state, "STATE")
+  
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
 
@@ -162,6 +177,16 @@ ggsave("age_grp_prob.png",
 
 ggsave("sleep_depression_prob.png", 
        results$sleep.hrs.scatter, 
+       device = "png", 
+       path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 12, 
+       height = 8, 
+       units="in")
+
+ggsave("days_anxious_depression_prob.png", 
+       results$days.anxious.scatter, 
        device = "png", 
        path = "./Output/Graphs/", 
        scale = 1, 

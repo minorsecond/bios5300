@@ -1,5 +1,7 @@
 #library(tidyverse)
 library(foreign)
+library(tigris)
+library(openxlsx)
 #library(readxl)
 #library(haven)
 #library(rvest)
@@ -28,5 +30,24 @@ CSVPATH <- "./Data/Raw/brfss_state.csv"
 download.file("https://raw.githubusercontent.com/arilamstein/complexsurvey/master/brfss_state.csv", CSVPATH)
 state.codes <- read.csv(CSVPATH)
 rm(CSVPATH)
+
+# Get the census data
+CENSUS_PATH <- "./Data/Raw/population.xlsx"
+download.file("https://www2.census.gov/programs-surveys/popest/tables/2010-2016/state/totals/nst-est2016-01.xlsx", CENSUS_PATH)
+census <- readWorkbook(CENSUS_PATH, sheet = 1, startRow = 1, colNames = TRUE,
+                       rowNames = FALSE, detectDates = FALSE, skipEmptyRows = TRUE,
+                       skipEmptyCols = TRUE, rows = NULL, cols = NULL, check.names = FALSE,
+                       namedRegion = NULL, na.strings = "NA", fillMergedCells = FALSE)
+
+census <- census[-c(seq(1,8)), ]  # Remove census rows 1-8
+census <- census[-c(seq(53,57)), ]  # Remove census rows 53-57
+census <- census[ , c(1, 10)]  # Only keep state name column and 2016 population column
+colnames(census) <- c("STATE", "Pop.2016")  # Replace column names
+census$State <- substring(census$State, 2)  # Remove leading '.' character from state names
+
+rm(CENSUS_PATH)
+
+# Get the state
+us_states <- states(year = 2016)
 
 gc()
