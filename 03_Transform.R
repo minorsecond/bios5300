@@ -136,7 +136,6 @@ brfss.survey.design <- svydesign(
   data = brfss.survey1
 )
 
-
 #  Don't need these now. Save RAM.
 rm(brfss.survey1)
 

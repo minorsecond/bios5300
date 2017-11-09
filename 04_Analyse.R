@@ -10,6 +10,7 @@ library(fiftystater)
 library(plyr)
 library(dplyr)
 library(Hmisc)
+library(stargazer)
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -50,6 +51,21 @@ results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status 
 # Calculate OR and 95% CI for estimate
 results$stroke.qb.ORCI <- exp(cbind(OR = coef(results$stroke.qbinom), confint(results$stroke.qbinom)))
 
+# Write report to file in ./Output/Reports/logit.html
+OR.vector <- exp(results$stroke.qbinom$coef)
+CI.vector <- exp(confint(results$stroke.qbinom))
+p.values <- summary(results$stroke.qbinom)$coefficients[, 4]
+stargazer(results$stroke.qbinom, 
+          coef = list(OR.vector), 
+          ci = T,
+          ci.custom = list(CI.vector),
+          p = list(p.values),
+          single.row = T,
+          type="html",
+          title = "Quasibinomial Regression Results",
+          out = "./Output/Reports/logit.html",
+          omit = c("Constant"))
+
 #KW test to determine if men/women have more strokes
 results$kwallis.stroke.by.sex <- svyranktest(diag.stroke ~ sex, design = brfss.survey.design)
 results$kwallis.stroke.by.vet.status <- svyranktest(diag.stroke ~ veteran, design = brfss.survey.design)
@@ -67,12 +83,12 @@ results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.str
 results$stroke.sex <- na.omit(svytable(~diag.stroke + sex, design = brfss.survey.design))
 colnames(results$stroke.sex) <- c("Male", "Female")
 rownames(results$stroke.sex) <- c("No stroke diagnosis", "Stroke diagnosis")
-results$stroke.sex.p <- prop.table(results$stroke.sex, 1)
+results$stroke.sex.p <- prop.table(results$stroke.sex, 2)
 
 results$stroke.heavy.drinker <- na.omit(svytable(~diag.stroke + alc.heavy.drinker, design = brfss.survey.design))
 colnames(results$stroke.heavy.drinker) <- c("Non-heavy Drinker", "Heavy Drinker")
 rownames(results$stroke.heavy.drinker) <- c("No stroke diagnosis", "Stroke diagnosis")
-results$stroke.heavy.drinker.p <- prop.table(results$stroke.heavy.drinker, 1)
+results$stroke.heavy.drinker.p <- prop.table(results$stroke.heavy.drinker, 2)
 
 results$stroke.veteran <- na.omit(svytable(~diag.stroke + veteran, design = brfss.survey.design))
 colnames(results$stroke.veteran) <- c("Non-Veteran", "Veteran")
@@ -95,11 +111,11 @@ results$box.ndrinks.weekly <- svyboxplot(alc.n.drinks.weekly ~ diag.stroke, desi
 # Age Group & Stroke Probability Graph
 results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, "age.grp"), 
                                   aes(factor(x, labels = c("18 to 24",
-                                                           "* 25 to 34",
-                                                           "* 35 to 44",
-                                                           "* 45 to 54",
-                                                           "* 55 to 64",
-                                                           "* 65+")), 
+                                                           "** 25 to 34",
+                                                           "** 35 to 44",
+                                                           "** 45 to 54",
+                                                           "** 55 to 64",
+                                                           "** 65+")), 
                                       predicted)) +
   geom_point() +
   geom_errorbar(aes(min=conf.low, 
@@ -165,8 +181,8 @@ results$total.strokes.by.state$STATE <- tolower(results$total.strokes.by.state$S
 us_states$STATE <- as.factor(tolower(us_states$NAME))
 census$STATE <- tolower(census$STATE)
 us_states$id <- rownames(us_states@data)
-us_states@data <- merge(us_states, census, "STATE", all.x = F)
-us_states@data <- merge(us_states, results$total.strokes.by.state, "STATE")
+us_states@data <- join(as.data.frame(us_states), census, "STATE")
+us_states@data <- join(as.data.frame(us_states), results$total.strokes.by.state, "STATE")
 us_states$id <- rownames(us_states@data)
 us_states$stroke.prevalence <- (us_states$diag.strokeStroke / us_states$Pop.2016) * 100000
 stroke.prevalence <- na.omit(us_states[,c("STATE", "stroke.prevalence")]@data)
@@ -180,7 +196,7 @@ stroke.prevalence$quintile <- with(stroke.prevalence,
 us_states.gg <- fortify(us_states)
 us_states.gg <- join(us_states.gg, us_states@data, by="id")
 
-colorPalette <- rev(brewer.pal(5, name = "RdYlGn"))
+colorPalette <- brewer.pal(5, name = "YlGn")
 results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) + 
   geom_map(aes(fill = quintile), map = fifty_states, show.legend = T, colour="grey25", size = .25) + 
   expand_limits(x = fifty_states$long, y = fifty_states$lat) +
@@ -207,7 +223,7 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) 
                "2057.2 - 2221.6    ",
                "2221.6 - 2528.8    ",
                "2528.8 - 2987.0    ",
-               "2986.0 - 3766.6    "))
+               "2987.0 - 3766.6    "))
   
   
 # Save the results object ----
