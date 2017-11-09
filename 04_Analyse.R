@@ -6,7 +6,10 @@ library(ggeffects)
 library(srvyr)
 library(survey)
 library(RColorBrewer)
-library(tigris)  # for state info
+library(fiftystater)
+library(plyr)
+library(dplyr)
+library(Hmisc)
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -145,7 +148,7 @@ results$days.anxious.pred <- ggpredict(results$stroke.qbinom, terms = c("days.an
 results$days.anxious.pred$group <- car::recode(results$days.anxious.pred$group, "'No'='No Depression Diagnosis'; 'Yes'='Depression Diagnosis';")
 
 results$days.anxious.scatter <- ggplot(results$days.anxious.pred, 
-                                    aes(x, predicted, colour = group)) +
+                                       aes(x, predicted, colour = group)) +
   geom_point(show.legend = F) +
   geom_line(show.legend = F) +
   geom_ribbon(aes(ymin=conf.low, ymax=conf.high, linetype = NA), alpha = 0.15, show.legend = F) +
@@ -156,13 +159,56 @@ results$days.anxious.scatter <- ggplot(results$days.anxious.pred,
   theme_Publication() +
   scale_colour_Publication()
 
-#  Maps
-total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
-us_states$STATE <- as.factor(us_states$NAME)
-us_states <- merge(us_states, census, "STATE")
-us_states <- merge(us_states, total.strokes.by.state, "STATE")
-us_states <- na.omit(us_states)
+#  Maps -------------------
+results$total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
+results$total.strokes.by.state$STATE <- tolower(results$total.strokes.by.state$STATE)
+us_states$STATE <- as.factor(tolower(us_states$NAME))
+census$STATE <- tolower(census$STATE)
+us_states$id <- rownames(us_states@data)
+us_states@data <- merge(us_states, census, "STATE", all.x = F)
+us_states@data <- merge(us_states, results$total.strokes.by.state, "STATE")
+us_states$id <- rownames(us_states@data)
 us_states$stroke.prevalence <- (us_states$diag.strokeStroke / us_states$Pop.2016) * 100000
+stroke.prevalence <- na.omit(us_states[,c("STATE", "stroke.prevalence")]@data)
+stroke.prevalence$quintile <- with(stroke.prevalence, 
+                                   cut(stroke.prevalence,
+                                       breaks=quantile(stroke.prevalence, 
+                                                       probs=seq(0,1, by=0.2), 
+                                                       na.rm=TRUE), 
+                                       include.lowest=TRUE,
+                                       dig.lab = 5))
+us_states.gg <- fortify(us_states)
+us_states.gg <- join(us_states.gg, us_states@data, by="id")
+
+colorPalette <- rev(brewer.pal(5, name = "RdYlGn"))
+results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) + 
+  geom_map(aes(fill = quintile), map = fifty_states, show.legend = T, colour="grey25", size = .25) + 
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) + 
+  scale_y_continuous(breaks = NULL) +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", 
+        panel.background = element_blank()) + 
+  theme_Publication() +
+  fifty_states_inset_boxes() +
+  ggtitle("2016 United States Stroke Prevalence",
+          subtitle = "Weighted BRFSS Data") +
+  scale_fill_manual(
+    values = colorPalette,
+    name = "Strokes / 100,000",
+    guide = guide_legend(
+      keyheight = unit(4, units = "mm"),
+      keywidth = unit(4, units = "mm"),
+      title.position = 'top',
+      reverse = F
+    ),
+    labels = c("1512.6 - 2057.2    ", 
+               "2057.2 - 2221.6    ",
+               "2221.6 - 2528.8    ",
+               "2528.8 - 2987.0    ",
+               "2986.0 - 3766.6    "))
+  
   
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
@@ -192,6 +238,16 @@ ggsave("days_anxious_depression_prob.png",
        results$days.anxious.scatter, 
        device = "png", 
        path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 12, 
+       height = 8, 
+       units="in")
+
+ggsave("stroke_prev_map.png", 
+       results$map.stroke.prevalence, 
+       device = "png", 
+       path = "./Output/Maps/", 
        scale = 1, 
        dpi = 300, 
        width = 12, 
