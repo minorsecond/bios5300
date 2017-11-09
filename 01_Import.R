@@ -2,6 +2,7 @@
 library(foreign)
 library(tigris)
 library(openxlsx)
+library(fiftystater)
 #library(readxl)
 #library(haven)
 #library(rvest)
@@ -43,7 +44,7 @@ census <- census[-c(seq(1,8)), ]  # Remove census rows 1-8
 census <- census[-c(seq(53,57)), ]  # Remove census rows 53-57
 census <- census[ , c(1, 10)]  # Only keep state name column and 2016 population column
 colnames(census) <- c("STATE", "Pop.2016")  # Replace column names
-census$State <- substring(census$State, 2)  # Remove leading '.' character from state names
+census$STATE <- substring(census$STATE, 2)  # Remove leading '.' character from state names
 
 rm(CENSUS_PATH)
 
