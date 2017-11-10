@@ -46,8 +46,8 @@ brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$
 
 # Logistic regression on stroke diagnosis status
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
-                                  days.anxious + diag.depression + diabetes  + veteran +
-                                  daily.sleep.hrs + sex + edu.level + income + race.eth + age.grp,
+                                  days.anxious + diag.depression + daily.sleep.hrs + 
+                                  sex + edu.level + income + race.eth + age.grp,
                                 brfss.survey.design, family = "quasibinomial")
 
 # Calculate OR and 95% CI for estimate
@@ -260,6 +260,7 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) 
                "2528.8 - 2987.0    ",
                "2987.0 - 3766.6    "))
 
+# Income group bargraph
 results$total.income.groups <- svytotal(~income, design = brfss.survey.design, na.rm=T)
 #results$total.income.groups <- melt(results$total.income.groups)
 colnames(results$total.income.groups) <- c("Total", "SE")
@@ -282,6 +283,27 @@ results$bargraph_income <- ggplot(results$total.income.groups, aes(rn, Total)) +
           subtitle = "Weighted BRFSS Data") +
   labs(x = "Income Range")
   
+# Age group bargraph
+results$total.age.groups <- svytotal(~age.grp, design = brfss.survey.design, na.rm=T)
+results$total.age.groups <- melt(results$total.age.groups)
+colnames(results$total.age.groups) <- c("Total", "SE")
+results$total.age.groups <- setDT(results$total.age.groups, keep.rownames = TRUE)[]
+
+results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn, Total)) +
+  geom_bar(stat = "identity") +
+  theme_Publication() +
+  scale_colour_Publication() +
+  scale_y_continuous(label = comma) +
+  scale_x_discrete(labels = c("18 to 24 Years Old",
+                              "25 to 34 Years Old",
+                              "35 to 44 Years Old",
+                              "45 to 54 Years Old",
+                              "55 to 64 Years Old",
+                              "65+ Years Old")) +
+  ggtitle("2016 United States Age Groups",
+          subtitle = "Weighted BRFSS Data") +
+  labs(x = "Age Group")
+
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
 
@@ -335,4 +357,15 @@ ggsave("income_bargraph.png",
        width = 12, 
        height = 8, 
        units="in")
+
+ggsave("age_bargraph.png", 
+       results$bargraph_age.grp, 
+       device = "png", 
+       path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 12, 
+       height = 8, 
+       units="in")
+
 
