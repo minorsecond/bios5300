@@ -1,3 +1,5 @@
+
+source("./Functions/detachAll.R")
 #library(tidyverse)
 library(foreign)
 library(tigris)

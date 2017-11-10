@@ -10,7 +10,9 @@ library(fiftystater)
 library(plyr)
 library(dplyr)
 library(Hmisc)
+library(data.table)
 library(stargazer)
+library(scales)
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -67,8 +69,8 @@ stargazer(results$stroke.qbinom,
           omit = c("Constant"))
 
 #KW test to determine if men/women have more strokes
-results$kwallis.stroke.by.sex <- svyranktest(diag.stroke ~ sex, design = brfss.survey.design)
-results$kwallis.stroke.by.vet.status <- svyranktest(diag.stroke ~ veteran, design = brfss.survey.design)
+results$table.sex <- svytable(~diag.stroke+sex, design = brfss.survey.design)
+results$chsq.by.sex <- svychisq(~diag.stroke+sex, design = brfss.survey.design)
 
 # Tables ----
 
@@ -98,7 +100,7 @@ results$stroke.veteran.p <- prop.table(results$stroke.veteran, 1)
 results$stroke.depression <- na.omit(svytable(~diag.stroke + diag.depression, design = brfss.survey.design))
 colnames(results$stroke.depression) <- c("No Depression Diagnosis", "Depression Diagnosis")
 rownames(results$stroke.depression) <- c("No Stroke Diagnosis", "Stroke Diagnosis")
-results$stroke.depression.p <- prop.table(results$stroke.depression, 2)
+results$stroke.depression.p <- prop.table(results$stroke.depression, 1)
 
 # Plots ----
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, design = brfss.survey.design, col = brewer.pal(2, "Set3"), all.outliers = F,
@@ -108,6 +110,16 @@ results$box.anxious <- svyboxplot(days.anxious ~ diag.stroke, design = brfss.sur
 results$box.ndrinks.weekly <- svyboxplot(alc.n.drinks.weekly ~ diag.stroke, design = brfss.survey.design,
                                          col = brewer.pal(2, "Set3"), all.outliers = F,
                                          xlab = "Outcome", ylab = "Number of Drinks Weekly", main = "Number of Alcoholic Drinks Weekly and Stroke Outcome")
+# Effects
+results$effects.age.income.sex <- Effect(focal.predictors = c("income", "age.grp","sex"), 
+                                              mod = results$stroke.qbinom)
+
+results$effects.age.sex <- Effect(focal.predictors = c("age.grp", "sex", "diag.depression"), 
+                                         mod = results$stroke.qbinom)
+
+results$effects.anxiety.depression <- Effect(focal.predictors = c("days.anxious", "sex", "diag.depression"),
+                                             mod=results$stroke.qbinom)
+
 # Age Group & Stroke Probability Graph
 results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, "age.grp"), 
                                   aes(factor(x, labels = c("18 to 24",
@@ -140,6 +152,29 @@ results$depression.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, "diag.dep
   labs(x="Depression Diagnosis", y = "Stroke Probability", 
        caption = "** - Significant at α=0.05") +
   theme_Publication() +
+  scale_fill_Publication() +
+  scale_colour_Publication()
+
+# Income Probability Graph
+results$income.prob.graph <- ggplot(ggpredict(results$stroke.qbinom, terms=c("income", "diag.depression")), 
+                                      aes(factor(x, labels = c("Income < $10,000",
+                                                               "Income < $15,000",
+                                                               "Income < $20,000",
+                                                               "Income < $25,000",
+                                                               "Income < $35,000",
+                                                               "Income < $50,000",
+                                                               "Income < $75,000",
+                                                               "Income > $75,000")), 
+                                          predicted, colour = group)) +
+  geom_point() +
+  geom_errorbar(aes(min=conf.low, 
+                    max=conf.high)) +
+  coord_flip() +
+  ggtitle("Depression & Stroke Probability Estimate") +
+  labs(x="Depression Diagnosis", y = "Stroke Probability", 
+       caption = "** - Significant at α=0.05") +
+  theme_Publication() +
+  facet_wrap(~group) +
   scale_fill_Publication() +
   scale_colour_Publication()
 
@@ -224,7 +259,28 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) 
                "2221.6 - 2528.8    ",
                "2528.8 - 2987.0    ",
                "2987.0 - 3766.6    "))
-  
+
+results$total.income.groups <- svytotal(~income, design = brfss.survey.design, na.rm=T)
+#results$total.income.groups <- melt(results$total.income.groups)
+colnames(results$total.income.groups) <- c("Total", "SE")
+results$total.income.groups <- setDT(results$total.income.groups, keep.rownames = TRUE)[]
+
+results$bargraph_income <- ggplot(results$total.income.groups, aes(rn, Total)) +
+  geom_bar(stat = "identity") +
+  theme_Publication() +
+  scale_colour_Publication() +
+  scale_y_continuous(label = comma) +
+  scale_x_discrete(labels = c("<$10,000",
+                              "$10,000 - $15,000",
+                              "$15,000 - $20,000",
+                              "$20,000 - $25,000",
+                              "$25,000 - $35,000",
+                              "$35,000 - $50,000",
+                              "$50,000 - $75,000",
+                              ">$75,000")) +
+  ggtitle("2016 United States Household Income Ranges",
+          subtitle = "Weighted BRFSS Data") +
+  labs(x = "Income Range")
   
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
@@ -269,3 +325,14 @@ ggsave("stroke_prev_map.png",
        width = 12, 
        height = 8, 
        units="in")
+
+ggsave("income_bargraph.png", 
+       results$bargraph_income, 
+       device = "png", 
+       path = "./Output/Graphs/", 
+       scale = 1, 
+       dpi = 300, 
+       width = 12, 
+       height = 8, 
+       units="in")
+
