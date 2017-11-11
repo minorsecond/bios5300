@@ -1,7 +1,3 @@
-# library(tidyverse)
-# library(lubridate)
-# library(stringr)
-# library(forcats)
 library(Hmisc)
 library(classInt)
 library(dplyr)
@@ -24,7 +20,7 @@ gc()
 # Remove unused columns
 brfss.survey1 <- brfss.survey1[ , -which(names(brfss.survey1) %in% c("X_STATE", "SEQNO", "VALUE"))]
 
-# Recode the BRFSS variables according to the codebook.
+# Recode the BRFSS variables according to the codebook ----
 brfss.survey1 <- brfss.survey1 %>%
   mutate(interview.date = as.Date(IDATE, "%m%d%Y"),
          race.eth = car::recode(X_RACEGR3, "1='White only, Non-Hispanic'; 2='Black only, Non-Hispanic'; 3='Other race only, Non-Hispanic'; 4='Multiracial, Non-Hispanic'; 5='Hispanic'; 9=NA"),
@@ -111,7 +107,7 @@ brfss.survey1 <- brfss.survey1[, c("X_LLCPWT", "X_STSTR", "X_PSU", "STATE", "int
                                    "alc.heavy.drinker", "smoker.status", "smoker.100.cigs.life", "current.cancer.treatment",
                                    "veteran", "diag.nonskin.cancer", "health.care.coverage.source", "time.since.care.coverage")]
 
-# Prompt to remove outliers.
+# Remove outliers. ----
 #$outlierKD(brfss.survey1, bmi)  # no
 outlierKD(brfss.survey1, alc.n.drinks.weekly)  # no
 outlierKD(brfss.survey1, as.integer(daily.sleep.hrs))  # yes
@@ -126,8 +122,7 @@ outlierKD(brfss.survey1, as.integer(daily.sleep.hrs))  # yes
 # Flush memory
 gc()
 
-# Create the survey design
-#brfss.survey2 <- subset(brfss.survey1, diag.depression != "Refused")
+# Create the survey design ----
 brfss.survey.design <- svydesign(
   nest = T,
   ids=~X_PSU, 

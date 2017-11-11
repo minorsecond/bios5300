@@ -1,16 +1,10 @@
-
 source("./Functions/detachAll.R")
-#library(tidyverse)
 library(foreign)
 library(tigris)
 library(openxlsx)
 library(fiftystater)
-#library(readxl)
-#library(haven)
-#library(rvest)
-#library(sonlite)
 
-# Download the 2016 BRFSS Data from CDCif(!file.exists(destfile)){
+# Download the 2016 BRFSS Data from CDC ----
 OUTFILE = "./Data/Raw/LLCP2016.xpt "
 URL <- "https://www.cdc.gov/brfss/annual_data/2016/files/LLCP2016XPT.zip"
 if (!file.exists(OUTFILE)) {
@@ -28,13 +22,13 @@ if (!file.exists(OUTFILE)) {
   rm(OUTFILE)
   rm(URL)}
 
-# Get CSV file of BRFSS state designations
+# Get CSV file of BRFSS state designations ----
 CSVPATH <- "./Data/Raw/brfss_state.csv"
 download.file("https://raw.githubusercontent.com/arilamstein/complexsurvey/master/brfss_state.csv", CSVPATH)
 state.codes <- read.csv(CSVPATH)
 rm(CSVPATH)
 
-# Get the census data
+# Get the census data ----
 CENSUS_PATH <- "./Data/Raw/population.xlsx"
 download.file("https://www2.census.gov/programs-surveys/popest/tables/2010-2016/state/totals/nst-est2016-01.xlsx", CENSUS_PATH)
 census <- readWorkbook(CENSUS_PATH, sheet = 1, startRow = 1, colNames = TRUE,
@@ -50,7 +44,7 @@ census$STATE <- substring(census$STATE, 2)  # Remove leading '.' character from 
 
 rm(CENSUS_PATH)
 
-# Get the state
+# Get the state data ----
 us_states <- states(year = 2016)
 
 gc()

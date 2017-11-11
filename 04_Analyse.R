@@ -1,6 +1,3 @@
-#library(tidyverse)
-# library(broom)
-# library(modelr)
 library(ggplot2)
 library(ggeffects)
 library(srvyr)
@@ -26,8 +23,6 @@ results <- list()
 readRDS("Data/transformed.rds") -> brfss.survey.design
 
 # Specific transformations ----
-
-# Models ----
 # Relevel some of the factors so that the regression output is easier to interpret.
 brfss.survey.design$variables$sex <- relevel(brfss.survey.design$variables$sex, ref = "Male")
 brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
@@ -44,7 +39,8 @@ brfss.survey.design$variables$health.care.coverage.source <- relevel(brfss.surve
 brfss.survey.design$variables$time.since.care.coverage <- relevel(brfss.survey.design$variables$time.since.care.coverage, ref = "Never")
 brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$diabetes, ref = "No")
 
-# Logistic regression on stroke diagnosis status
+# Models ----
+# Logistic regression on stroke diagnosis status ----
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
                                   days.anxious + diag.depression + daily.sleep.hrs + 
                                   sex + edu.level + income + race.eth + age.grp,
@@ -64,28 +60,25 @@ stargazer(results$stroke.qbinom,
           p = list(p.values),
           single.row = T,
           type="html",
-          title = "Quasibinomial Regression Results",
+          title = "Logistic Regression Model Estimating Effects of Risk Factors & Demographic Variables on Stroke Outcome Odds",
           out = "./Output/Reports/logit.html",
           omit = c("Constant"))
 
-#KW test to determine if men/women have more strokes
-results$table.sex <- svytable(~diag.stroke+sex, design = brfss.survey.design)
-results$chsq.by.sex <- svychisq(~diag.stroke+sex, design = brfss.survey.design)
-
 # Tables ----
 
-# Summary statistics
+# Summary statistics ----
 results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 
 
-# Two-way tables
+# Two-way tables & Chi Sq. Tests----
 results$stroke.sex <- na.omit(svytable(~diag.stroke + sex, design = brfss.survey.design))
 colnames(results$stroke.sex) <- c("Male", "Female")
 rownames(results$stroke.sex) <- c("No stroke diagnosis", "Stroke diagnosis")
 results$stroke.sex.p <- prop.table(results$stroke.sex, 2)
+results$chsq.by.sex <- svychisq(~diag.stroke+sex, design = brfss.survey.design)
 
 results$stroke.heavy.drinker <- na.omit(svytable(~diag.stroke + alc.heavy.drinker, design = brfss.survey.design))
 colnames(results$stroke.heavy.drinker) <- c("Non-heavy Drinker", "Heavy Drinker")
@@ -101,6 +94,7 @@ results$stroke.depression <- na.omit(svytable(~diag.stroke + diag.depression, de
 colnames(results$stroke.depression) <- c("No Depression Diagnosis", "Depression Diagnosis")
 rownames(results$stroke.depression) <- c("No Stroke Diagnosis", "Stroke Diagnosis")
 results$stroke.depression.p <- prop.table(results$stroke.depression, 1)
+results$chsq.by.depression <- svychisq(~diag.stroke+diag.depression, design = brfss.survey.design)
 
 # Plots ----
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, design = brfss.survey.design, col = brewer.pal(2, "Set3"), all.outliers = F,
@@ -210,6 +204,50 @@ results$days.anxious.scatter <- ggplot(results$days.anxious.pred,
   theme_Publication() +
   scale_colour_Publication()
 
+# Income group bargraph
+results$total.income.groups <- svytotal(~income, design = brfss.survey.design, na.rm=T)
+#results$total.income.groups <- melt(results$total.income.groups)
+colnames(results$total.income.groups) <- c("Total", "SE")
+results$total.income.groups <- setDT(results$total.income.groups, keep.rownames = TRUE)[]
+
+results$bargraph_income <- ggplot(results$total.income.groups, aes(rn, Total)) +
+  geom_bar(stat = "identity") +
+  theme_Publication() +
+  scale_colour_Publication() +
+  scale_y_continuous(label = comma) +
+  scale_x_discrete(labels = c("<$10,000",
+                              "$10,000 - $15,000",
+                              "$15,000 - $20,000",
+                              "$20,000 - $25,000",
+                              "$25,000 - $35,000",
+                              "$35,000 - $50,000",
+                              "$50,000 - $75,000",
+                              ">$75,000")) +
+  ggtitle("2016 United States Household Income Ranges",
+          subtitle = "Weighted BRFSS Data") +
+  labs(x = "Income Range")
+
+# Age group bargraph
+results$total.age.groups <- svytotal(~age.grp, design = brfss.survey.design, na.rm=T)
+results$total.age.groups <- melt(results$total.age.groups)
+colnames(results$total.age.groups) <- c("Total", "SE")
+results$total.age.groups <- setDT(results$total.age.groups, keep.rownames = TRUE)[]
+
+results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn, Total)) +
+  geom_bar(stat = "identity") +
+  theme_Publication() +
+  scale_colour_Publication() +
+  scale_y_continuous(label = comma) +
+  scale_x_discrete(labels = c("18 to 24 Years Old",
+                              "25 to 34 Years Old",
+                              "35 to 44 Years Old",
+                              "45 to 54 Years Old",
+                              "55 to 64 Years Old",
+                              "65+ Years Old")) +
+  ggtitle("2016 United States Age Groups",
+          subtitle = "Weighted BRFSS Data") +
+  labs(x = "Age Group")
+
 #  Maps -------------------
 results$total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
 results$total.strokes.by.state$STATE <- tolower(results$total.strokes.by.state$STATE)
@@ -259,50 +297,6 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) 
                "2221.6 - 2528.8    ",
                "2528.8 - 2987.0    ",
                "2987.0 - 3766.6    "))
-
-# Income group bargraph
-results$total.income.groups <- svytotal(~income, design = brfss.survey.design, na.rm=T)
-#results$total.income.groups <- melt(results$total.income.groups)
-colnames(results$total.income.groups) <- c("Total", "SE")
-results$total.income.groups <- setDT(results$total.income.groups, keep.rownames = TRUE)[]
-
-results$bargraph_income <- ggplot(results$total.income.groups, aes(rn, Total)) +
-  geom_bar(stat = "identity") +
-  theme_Publication() +
-  scale_colour_Publication() +
-  scale_y_continuous(label = comma) +
-  scale_x_discrete(labels = c("<$10,000",
-                              "$10,000 - $15,000",
-                              "$15,000 - $20,000",
-                              "$20,000 - $25,000",
-                              "$25,000 - $35,000",
-                              "$35,000 - $50,000",
-                              "$50,000 - $75,000",
-                              ">$75,000")) +
-  ggtitle("2016 United States Household Income Ranges",
-          subtitle = "Weighted BRFSS Data") +
-  labs(x = "Income Range")
-  
-# Age group bargraph
-results$total.age.groups <- svytotal(~age.grp, design = brfss.survey.design, na.rm=T)
-results$total.age.groups <- melt(results$total.age.groups)
-colnames(results$total.age.groups) <- c("Total", "SE")
-results$total.age.groups <- setDT(results$total.age.groups, keep.rownames = TRUE)[]
-
-results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn, Total)) +
-  geom_bar(stat = "identity") +
-  theme_Publication() +
-  scale_colour_Publication() +
-  scale_y_continuous(label = comma) +
-  scale_x_discrete(labels = c("18 to 24 Years Old",
-                              "25 to 34 Years Old",
-                              "35 to 44 Years Old",
-                              "45 to 54 Years Old",
-                              "55 to 64 Years Old",
-                              "65+ Years Old")) +
-  ggtitle("2016 United States Age Groups",
-          subtitle = "Weighted BRFSS Data") +
-  labs(x = "Age Group")
 
 # Save the results object ----
 saveRDS(results, file = "Data/results.rds")
