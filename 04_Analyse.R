@@ -10,6 +10,7 @@ library(Hmisc)
 library(data.table)
 library(stargazer)
 library(scales)
+library(effects)
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -41,6 +42,11 @@ brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$
 
 # Models ----
 # Logistic regression on stroke diagnosis status ----
+results$stroke.binom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
+                                  days.anxious + diag.depression + daily.sleep.hrs + 
+                                  sex + edu.level + income + race.eth + age.grp,
+                                brfss.survey.design, family = "binomial")
+
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
                                   days.anxious + diag.depression + daily.sleep.hrs + 
                                   sex + edu.level + income + race.eth + age.grp,
@@ -48,6 +54,9 @@ results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status 
 
 # Calculate OR and 95% CI for estimate
 results$stroke.qb.ORCI <- exp(cbind(OR = coef(results$stroke.qbinom), confint(results$stroke.qbinom)))
+results$stroke.b.ORCI <- exp(cbind(OR = coef(results$stroke.binom), confint(results$stroke.binom)))
+
+results$logistic.anova <- anova(results$stroke.qbinom)
 
 # Write report to file in ./Output/Reports/logit.html
 OR.vector <- exp(results$stroke.qbinom$coef)
@@ -71,7 +80,7 @@ results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.sur
 results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-
+results$total.strokes <- svytotal(~diag.stroke, design = brfss.survey.design, na.rm=T)
 
 # Two-way tables & Chi Sq. Tests----
 results$stroke.sex <- na.omit(svytable(~diag.stroke + sex, design = brfss.survey.design))
@@ -206,7 +215,7 @@ results$days.anxious.scatter <- ggplot(results$days.anxious.pred,
 
 # Income group bargraph
 results$total.income.groups <- svytotal(~income, design = brfss.survey.design, na.rm=T)
-#results$total.income.groups <- melt(results$total.income.groups)
+results$total.income.groups <- melt(results$total.income.groups)
 colnames(results$total.income.groups) <- c("Total", "SE")
 results$total.income.groups <- setDT(results$total.income.groups, keep.rownames = TRUE)[]
 
@@ -269,7 +278,7 @@ stroke.prevalence$quintile <- with(stroke.prevalence,
 us_states.gg <- fortify(us_states)
 us_states.gg <- join(us_states.gg, us_states@data, by="id")
 
-colorPalette <- brewer.pal(5, name = "YlGn")
+results$colorPalette <- brewer.pal(5, name = "YlGn")
 results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) + 
   geom_map(aes(fill = quintile), map = fifty_states, show.legend = T, colour="grey25", size = .25) + 
   expand_limits(x = fifty_states$long, y = fifty_states$lat) +
@@ -284,7 +293,7 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence, aes(map_id = STATE)) 
   ggtitle("2016 United States Stroke Prevalence",
           subtitle = "Weighted BRFSS Data") +
   scale_fill_manual(
-    values = colorPalette,
+    values = results$colorPalette,
     name = "Strokes / 100,000",
     guide = guide_legend(
       keyheight = unit(4, units = "mm"),

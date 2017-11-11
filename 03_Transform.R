@@ -95,7 +95,7 @@ brfss.survey1 <- brfss.survey1 %>%
          health.care.coverage.source = as.factor(health.care.coverage.source),
          time.since.care.coverage = car::recode(LSTCOVRG, "1='<6 Months'; 2='Between 6 months and 1 year'; 3='Between 1 and 3 years'; 4='>3 Years'; 5='Never'; 7=NA; 9=NA"),
          time.since.care.coverage = as.factor(time.since.care.coverage),
-         diabetes = car::recode(DIABETE3, "1='Yes'; 2='No'; 3='No'; 4='Noye'; 7=NA; 9=NA"),
+         diabetes = car::recode(DIABETE3, "1='Yes'; 2='No'; 3='No'; 4='No'; 7=NA; 9=NA"),
          diabetes = factor(diabetes))
 
 # Only keep the variables we need
