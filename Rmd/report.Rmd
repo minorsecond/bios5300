@@ -23,7 +23,7 @@ geometry: margin=1in
 keywords: Stroke, Alcohol, Smoking, Anxiety, Depression
 bibliography: ../Data/Misc/bios.bib
 thanks: ''
-abstract: Although numerous studies have investigated the relationshiops between 
+abstract: Although numerous studies have investigated the relationships between 
   lifestyle risk factors and stroke outcome, few have done so while controlling
   as age and race/ethnicity range. Utilizing quasi-binomial logistic regression, 
   we show that the odds of having had a stroke increase with being a daily 
@@ -123,7 +123,7 @@ Stroke      | 3.13%   | 3.20%
 
 Table: Proportion of Stroke Outcomes in Males and Females
 
-A chi-squared test of independence revealed that the there is statistically
+A chi-squared test of independence revealed that the there is not statistically
 significant evidence that stroke outcome and sex is independent from one another
 at an alpha level of 0.05, $\chi^2$ (3, $N$=486,303) = 1.73, $p$=0.48.
 

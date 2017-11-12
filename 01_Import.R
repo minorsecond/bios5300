@@ -1,6 +1,5 @@
 source("./Functions/detachAll.R")
 library(foreign)
-library(tigris)
 library(openxlsx)
 library(fiftystater)
 
