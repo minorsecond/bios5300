@@ -11,6 +11,7 @@ library(data.table)
 library(stargazer)
 library(scales)
 library(effects)
+library(vcd)
 source("./Functions/pub_graphs.R")
 options(survey.lonely.psu = "certainty")
 
@@ -49,7 +50,7 @@ results$stroke.binom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status +
 
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
                                   days.anxious + diag.depression + daily.sleep.hrs + 
-                                  sex + edu.level + income + race.eth + age.grp,
+                                  sex + age.grp + race.eth,
                                 brfss.survey.design, family = "quasibinomial")
 
 # Calculate OR and 95% CI for estimate
@@ -105,6 +106,11 @@ rownames(results$stroke.depression) <- c("No Stroke Diagnosis", "Stroke Diagnosi
 results$stroke.depression.p <- prop.table(results$stroke.depression, 1)
 results$chsq.by.depression <- svychisq(~diag.stroke+diag.depression, design = brfss.survey.design)
 
+results$stroke.smoker <- na.omit(svytable(~smoker.status + diag.stroke, design = brfss.survey.design))
+#colnames(results$stroke.smoker) <- c("Non", "Depression Diagnosis")
+results$stroke.smoker.p <- prop.table(results$stroke.smoker, 1)
+results$chsq.by.smoker <- svychisq(~diag.stroke+smoker.status, design = brfss.survey.design, statistic = "Chisq" )
+
 # Plots ----
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, design = brfss.survey.design, col = brewer.pal(2, "Set3"), all.outliers = F,
                                 xlab = "Outcome", ylab = "Hours of Sleep", main = "Hours of Sleep and Stroke Outcome")
@@ -121,6 +127,9 @@ results$effects.age.sex <- Effect(focal.predictors = c("age.grp", "sex", "diag.d
                                          mod = results$stroke.qbinom)
 
 results$effects.anxiety.depression <- Effect(focal.predictors = c("days.anxious", "sex", "diag.depression"),
+                                             mod=results$stroke.qbinom)
+
+results$effects.anxiety.depression.smoking <- Effect(focal.predictors = c("days.anxious", "smoker.status", "diag.depression"),
                                              mod=results$stroke.qbinom)
 
 # Age Group & Stroke Probability Graph
@@ -256,6 +265,12 @@ results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn, Total)) +
   ggtitle("2016 United States Age Groups",
           subtitle = "Weighted BRFSS Data") +
   labs(x = "Age Group")
+
+# Mosaic Plots
+mosaicplot(results$stroke.smoker, shade = T,
+           main = "Proportions of Stroke Diagnoses by Smoker Status",
+           ylab = "Stroke Diagnosis",
+           xlab = "Smoker Status")
 
 #  Maps -------------------
 results$total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)

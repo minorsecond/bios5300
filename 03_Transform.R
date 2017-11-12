@@ -53,7 +53,7 @@ brfss.survey1 <- brfss.survey1 %>%
          daily.sleep.hrs = car::recode(SLEPTIM1, "77=NA; 99 =NA"),
          daily.sleep.hrs <- as.integer(daily.sleep.hrs),
          diag.depression = car::recode(ADDEPEV2, "1='Yes'; 2='No'; 7=NA; 9=NA"),
-         diag.depression = as.factor(diag.depression),
+         diag.depression = factor(diag.depression, labels = c("No Depression Diagnosis", "Depression Diagnosis")),
          life.satisfied.binary = car::recode(LSATISFY, "c(1,2)=1; c(3,4)=0; NA=NA; else=NA"),  # Variable for logistic reg
          life.satisfied.binary = as.factor(life.satisfied.binary),
          life.satisfied = car::recode(LSATISFY, "1='Very satisfied'; 2='Satisfied'; 3='Dissatisfied'; 4='Very dissatisfied'; 7=NA; 9=NA"),
