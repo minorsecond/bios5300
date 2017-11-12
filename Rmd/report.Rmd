@@ -90,7 +90,7 @@ reported consuming more than 7 drinks per week. This value was calculated after
 asking the subjects, "during the past 30 days, on the days when you drank, about
 how many drinks did you drink on average?" and "during the past 30 days, how many
 days per week or month did you have at least one drink of any alcoholic beverage
-such as beer, wine, a molt beverage or liquor?"
+such as beer, wine, a malt beverage or liquor?"
 [@CentersforDiseaseControlandPrevention2007].
 
 ## Logistic Regression Model
@@ -250,7 +250,7 @@ days of anxiety and increases to 15% for subjects who experienced thirty days of
 signiticant anxiety. This relationship is similar for subjects who currently
 smoke some days.
 
-``` {r figWithCaption2, fig.cap="Effects of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis", echo=F}
+``` {r figWithCaption2, fig.cap="Effects of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis and Smoker Status", echo=F}
 plot(results$effects.anxiety.depression.smoking, 
      multiline=T, 
      main = "Effect of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis",
