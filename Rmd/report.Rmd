@@ -253,7 +253,7 @@ smoke some days.
 ``` {r figWithCaption2, fig.cap="Effects of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis and Smoker Status", echo=F}
 plot(results$effects.anxiety.depression.smoking, 
      multiline=T, 
-     main = "Effect of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis",
+     main = "Effect of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis and Smoker Status",
      xlab = "Anxious Days",
      ylab = "Probability of Having Had a Stroke",
      ci.style="band")

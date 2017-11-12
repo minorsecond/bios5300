@@ -1,19 +1,61 @@
 \documentclass{article}
+\newcommand\tab[1][3mm]{\hspace*{#1}}
+
 \begin{document}
 	\thispagestyle{empty}
-		% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-		% Date and time: Sun, Nov 05, 2017 - 12:29:22
-		\begin{table}[!htbp] \centering 
-		  \caption{Weighted Stroke Outcome Proportion by Sex} 
-		  \label{} 
-		\begin{tabular}{@{\extracolsep{5pt}} cccc} 
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Fri, Nov 10, 2017 - 23:34:02
+\begin{table}[!htbp] \centering 
+	\caption{Logistic Regression Model Estimating Effects of Risk Factors \& Demographic Variables on Stroke Outcome Odds"} 
+	\label{} 
+	\begin{tabular}{@{\extracolsep{5pt}}lc} 
 		\\[-1.8ex]\hline 
 		\hline \\[-1.8ex] 
-		Diagnosis & Male & Female \\ 
+		& \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+		\cline{2-2} 
+		\\[-1.8ex] & Stroke Outcome \\ 
+		\hline \\[-1.8ex]
+		\textbf{Risk Factors} \\
+		\tab Heavy Drinker & 1.119 (0.478, 2.618) \\ 
+		\tab Current Smoker (Daily) & 1.099 (0.685, 1.761) \\ 
+		\tab Current Smoker (Some days) & 1.099 (0.597, 2.023) \\ 
+		\tab Former Smoker & 1.059 (0.753, 1.490) \\ 
+		\tab Number of Anxious Days & 1.021$^{***}$ (1.005, 1.038) \\ 
+		\tab Diagnosed Depression & 2.051$^{***}$ (1.374, 3.061) \\ 
+		\tab Daily Hours of Sleep & 0.904$^{*}$ (0.813, 1.006) \\ 
+		\tab Female & 0.710$^{**}$ (0.515, 0.980) \\ 
+		\textbf{Education Level} \\
+		\tab College: 1 year to 3 years (Some college or technical school) & 2.100 (0.287, 15.340) \\ 
+		\tab College: 4 years or more (College graduate) & 1.288 (0.172, 9.638) \\ 
+		\tab Grade 12 or GED (High school graduate)  & 2.439 (0.334, 17.830) \\ 
+		\tab Grades 1 through 8 (Elementary)  & 2.060 (0.277, 15.319) \\ 
+		\tab Grades 9 through 11 (Some high school)  & 2.560 (0.339, 19.333) \\
+		\textbf{Annual Household Income} \\
+		\tab $<$ \$15,000 & 1.499 (0.801, 2.806) \\ 
+		\tab \$15,000 - \$20,000 & 1.613 (0.901, 2.887) \\ 
+		\tab \$20,000 - \$25,000 & 0.971 (0.535, 1.764) \\ 
+		\tab \$25,000 - \$35,000 & 0.909 (0.483, 1.709) \\ 
+		\tab \$35,000 - \$50,000 & 0.554$^{*}$ (0.301, 1.021) \\ 
+		\tab \$50,000 - \$75,000 & 0.478$^{**}$ (0.249, 0.917) \\ 
+		\tab $>$ \$75,000 & 0.411$^{**}$ (0.198, 0.856) \\ 
+		\textbf{Race/Ethnicity} \\
+		\tab Black only, Non-Hispanic & 1.870 (0.660, 5.297) \\ 
+		\tab Hispanic & 0.880 (0.255, 3.034) \\ 
+		\tab Multiracial, Non-Hispanic & 2.690 (0.770, 9.400) \\ 
+		\tab White only, Non-Hispanic & 1.746 (0.655, 4.655) \\ 
+		\textbf{Age} \\
+		\tab Age 25 to 34 & 10.460$^{**}$ (1.272, 86.001) \\ 
+		\tab Age 35 to 44 & 26.313$^{***}$ (3.404, 203.395) \\ 
+		\tab Age 45 to 54 & 28.905$^{***}$ (3.813, 219.132) \\ 
+		\tab Age 55 to 64 & 51.077$^{***}$ (6.874, 379.542) \\ 
+		\tab Age 65 or older & 95.218$^{***}$ (12.740, 711.666) \\ 
 		\hline \\[-1.8ex] 
-		\multicolumn{1}{l}{No stroke diagnosis} & $0.487$ & $0.513$\\ 
-		\multicolumn{1}{l}{Stroke diagnosis} & $0.481$ & $0.519$\\ 
+		Observations & 7,850 \\ 
+		\hline 
 		\hline \\[-1.8ex] 
-		\end{tabular} 
-		\end{table}
+		\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+	\end{tabular} 
+\end{table} 
+
+	P(X=k)={n \choose k}p(p+k\phi)^{k-1}(1-p-k\phi)^{n-k}
 \end{document}
