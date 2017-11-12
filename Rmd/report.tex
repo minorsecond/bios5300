@@ -1,0 +1,456 @@
+\documentclass[11pt,]{article}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
+\usepackage[]{mathpazo}
+
+
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+
+
+
+\usepackage{abstract}
+\renewcommand{\abstractname}{}    % clear the title
+\renewcommand{\absnamepos}{empty} % originally center
+
+\renewenvironment{abstract}
+ {{%
+    \setlength{\leftmargin}{0mm}
+    \setlength{\rightmargin}{\leftmargin}%
+  }%
+  \relax}
+ {\endlist}
+
+\makeatletter
+\def\@maketitle{%
+  \newpage
+%  \null
+%  \vskip 2em%
+%  \begin{center}%
+  \let \footnote \thanks
+    {\fontsize{18}{20}\selectfont\raggedright  \setlength{\parindent}{0pt} \@title \par}%
+}
+%\fi
+\makeatother
+
+
+
+
+\setcounter{secnumdepth}{0}
+
+\usepackage{longtable,booktabs}
+
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+\title{The Effects of Heavy Drinking, Smoking, Anxiety and Depression on Stroke
+Odds: A Cross-Sectional Study  }
+
+
+
+\author{\Large Robert Wardrup\vspace{0.05in} \newline\normalsize\emph{}   \and \Large Elizabeth Murphy\vspace{0.05in} \newline\normalsize\emph{}   \and \Large Natalie Requinez\vspace{0.05in} \newline\normalsize\emph{}   \and \Large Joshua Averitt\vspace{0.05in} \newline\normalsize\emph{}  }
+
+
+\date{}
+
+\usepackage{titlesec}
+
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\itshape}
+\titleformat*{\subsubsection}{\normalsize\itshape}
+\titleformat*{\paragraph}{\normalsize\itshape}
+\titleformat*{\subparagraph}{\normalsize\itshape}
+
+
+\usepackage{natbib}
+\bibliographystyle{apa}
+\usepackage[strings]{underscore} % protect underscores in most circumstances
+
+
+
+\newtheorem{hypothesis}{Hypothesis}
+\usepackage{setspace}
+
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \PassOptionsToPackage{hyphens}{url}\usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \PassOptionsToPackage{hyphens}{url}\usepackage[unicode=true]{hyperref}
+\fi
+}
+
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={Robert Wardrup () and Elizabeth Murphy () and Natalie Requinez () and Joshua Averitt ()},
+             pdfkeywords = {Stroke, Alcohol, Smoking, Anxiety, Depression},  
+            pdftitle={The Effects of Heavy Drinking, Smoking, Anxiety and Depression on Stroke
+Odds: A Cross-Sectional Study},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+% add tightlist ----------
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\begin{document}
+	
+% \pagenumbering{arabic}% resets `page` counter to 1 
+%
+% \maketitle
+
+{% \usefont{T1}{pnc}{m}{n}
+\setlength{\parindent}{0pt}
+\thispagestyle{plain}
+{\fontsize{18}{20}\selectfont\raggedright 
+\maketitle  % title \par  
+
+}
+
+{
+   \vskip 13.5pt\relax \normalsize\fontsize{11}{12} 
+\textbf{\authorfont Robert Wardrup} \hskip 15pt \emph{\small }   \par \textbf{\authorfont Elizabeth Murphy} \hskip 15pt \emph{\small }   \par \textbf{\authorfont Natalie Requinez} \hskip 15pt \emph{\small }   \par \textbf{\authorfont Joshua Averitt} \hskip 15pt \emph{\small }   
+
+}
+
+}
+
+
+
+
+
+
+
+
+\begin{abstract}
+
+    \hbox{\vrule height .2pt width 39.14pc}
+
+    \vskip 8.5pt % \small 
+
+\noindent Although numerous studies have investigated the relationshiops between
+lifestyle risk factors and stroke outcome, few have done so while
+controlling as age and race/ethnicity range. Utilizing quasi-binomial
+logistic regression, we show that the odds of having had a stroke
+increase with being a daily smoker, days of anxiety, and having a
+depression diagnosis.
+
+
+\vskip 8.5pt \noindent \emph{Keywords}: Stroke, Alcohol, Smoking, Anxiety, Depression \par
+
+    \hbox{\vrule height .2pt width 39.14pc}
+
+
+
+\end{abstract}
+
+
+\vskip 6.5pt
+
+
+\noindent  \section{Introduction}\label{introduction}
+
+Natalie's text here.
+
+\begin{figure}
+\centering
+\includegraphics{report_files/figure-latex/figWithCaption-1.pdf}
+\caption{2016 United States Stroke Prevalence}
+\end{figure}
+
+\section{Methods}\label{methods}
+
+\subsection{Josh's Text}\label{joshs-text}
+
+\subsection{Survey Weighting}\label{survey-weighting}
+
+The BRFSS survey data were weighted using the raking method, which is a
+two-part methodology to help insure unbiased results by accounting for
+noncoverage and nonresponse bias and forcing the total number of cases
+to equal the population estimate of each state in the United States
+\citep{CentersforDiseaseControlandPrevention2007}.
+
+\subsection{Dependent and Independent
+Variables}\label{dependent-and-independent-variables}
+
+The dependent variable, stroke outcome, was recoded to a binary variable
+for use in a logistic regression model. Depression diagnosis and heavy
+drinker were also recoded into a binary variable. For each variable used
+in the analysis, \emph{don't know / unsure} and \emph{refused} responses
+were dropped. Table 1 lists the variables included in the model.
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Dependent and Independent Variables Used in Logistic Regression
+Model}\tabularnewline
+\toprule
+Variable Name & Variable Type\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Variable Name & Variable Type\tabularnewline
+\midrule
+\endhead
+Stroke Diagnosis & Dichotomous (DV)\tabularnewline
+Heavy Alcohol Drinker & Dichotomous\tabularnewline
+Depression Diagnosis & Dichotomous\tabularnewline
+Sex & Dichotomous\tabularnewline
+Days Anxious & Continuous\tabularnewline
+Daily Sleep Hours & Continuous\tabularnewline
+Smoker Status & Categorical\tabularnewline
+Race/Ethnicity & Categorical\tabularnewline
+Age Group & Categorical\tabularnewline
+\bottomrule
+\end{longtable}
+
+A subject was designated as a heavy drinker if they were either an adult
+male who reported consuming more than 14 drinks per week or an adult
+female who reported consuming more than 7 drinks per week. This value
+was calculated after asking the subjects, ``during the past 30 days, on
+the days when you drank, about how many drinks did you drink on
+average?'' and ``during the past 30 days, how many days per week or
+month did you have at least one drink of any alcoholic beverage such as
+beer, wine, a molt beverage or liquor?''
+\citep{CentersforDiseaseControlandPrevention2007}.
+
+\subsection{Logistic Regression Model}\label{logistic-regression-model}
+
+The first model used in calculating the logistic regression utilized the
+standard binomial function to predict the log odds of binary outcome
+\(k\). The binomial formula, is given as
+\[P(k)={n \choose k}p^{k}(1-p)^{n-k},\] where \(k\) represents a stroke
+outcome, \(n\) represents the sample size, and \(p\) is the probability
+that a stroke will occur. {[}\textbf{Explain overdispersion}{]} Before
+being checked for overdispersion by calculating \(\phi\), given by the
+formula
+\[\phi = \frac{1}{(n-p-1)}\sum_{i=1}^{n} (y_{i} -\hat{y} _{i})^{2} 
+/ \hat{y} _{i}.\] A threshold of \(\phi > 1\), was used to determine if
+the data were overdispersed, possibly leading to unstable estimates. To
+account for the overdispersion, \(\phi\) was included as a model
+parameter, giving the formula
+\[P(X=k)={n \choose k}p(p+k\phi)^{k-1}(1-p-k\phi)^{n-k}.\]
+{[}\textbf{Explain the quasi-binomial family more}{]}
+
+\section{Results}\label{results}
+
+The weighted number of strokes in the United States in 2016 was
+8,020,080, representing approximately 2.5\% of the total 2016 United
+States population. Out of these, 3.20\% were female and 3.13\% were
+male.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Proportion of Stroke Outcomes in Males and
+Females}\tabularnewline
+\toprule
+Diagnosis & Male & Female\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Diagnosis & Male & Female\tabularnewline
+\midrule
+\endhead
+No Stroke & 96.87\% & 96.80\%\tabularnewline
+Stroke & 3.13\% & 3.20\%\tabularnewline
+\bottomrule
+\end{longtable}
+
+A chi-squared test of independence revealed that the there is
+statistically significant evidence that stroke outcome and sex is
+independent from one another at an alpha level of 0.05, \(\chi^2\) (3,
+\(N\)=486,303) = 1.73, \(p\)=0.48.
+
+The proportion of subjects who have suffered from a stroke by smoker
+status is shown in Table 3, and visually in Figure 2. The percentage of
+subjects who have had a stroke is highest for the subjects who smoke
+daily, followed by subjects who are former smokers, followed by subjects
+who smoke some days. A possible explanation for the lower percentage of
+stroke in subjects who smoke some days than subjects who are former
+smokers is that stroke victims may simply have ceased smoking after
+having a stroke.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Proportion of Stroke Outcomes and Smoker Status}\tabularnewline
+\toprule
+Smoker Status & No Stroke & Stroke\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Smoker Status & No Stroke & Stroke\tabularnewline
+\midrule
+\endhead
+Never Smoked & 97.8\% & 2.2\%\tabularnewline
+Former Smoker & 95.4\% & 4.6\%\tabularnewline
+Smokes Some Days & 96.2\% & 3.8\%\tabularnewline
+Smokes Daily & 95.0\% & 5.0\%\tabularnewline
+\bottomrule
+\end{longtable}
+
+The proportions shown in Table 3 are depicted as a mosaic plot in Figure
+2. The mosaic plot is a graphical depiction the proportions within each
+table cell, shaded by the difference from the expected observation. Blue
+depicts a higher than expected number of observations for that cell, and
+red depicts a lower than expected number of observations for that cell.
+As shown in Figure 2, there were a greater than expected number of
+non-smokers that have never had a stroke, and a greater than expected
+number of smokers and former smokers who have had a stroke.
+
+\begin{figure}
+\centering
+\includegraphics{report_files/figure-latex/figWithCaption3-1.pdf}
+\caption{Proportion of Stroke Outcomes and Smoker Status}
+\end{figure}
+
+A chi-squared test of independence revealed that there is statistically
+significant evidence that stroke outcome and smoking status were not
+independent from one another, \(\chi^2\) (3, \(N\)=486,303) = 2352.5,
+\(p <\) 0.001.
+
+The mean hours of sleep for those who had a stroke was 6.99 hours and
+6.98 for those who did not have a stroke.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Mean Values of Selected Risk Factors}\tabularnewline
+\toprule
+Factor & Outcome & Mean\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Factor & Outcome & Mean\tabularnewline
+\midrule
+\endhead
+Days Anxious & No Stroke & 4.79\tabularnewline
+& Stroke & 8.05\tabularnewline
+Nightly Sleep Hours & No Stroke & 6.98\tabularnewline
+& Stroke & 6.99\tabularnewline
+Number Drinks Weekly & No Stroke & 79.07\tabularnewline
+& Stroke & 40.31\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{Logistic Regression
+Model}\label{logistic-regression-model-1}
+
+The binomial logistic regression model resulted in a \(\phi\) value of
+2.52, indicating that there is overdispersion in the estimates and the
+quasi-binomial function should be used instead.
+
+The results of the quasi-binomial logistic regression (Table 4) indicate
+that being female is a protective factor (OR = 0.71, 95\% CI = {[}0.51 -
+0.98{]}), as well as having an annual household income between \$35,000
+and \$75,000 (OR = 0.48, 95\% CI = {[}0.25 - 0.92{]}) or over \$75,000
+(OR = 0.41, 95\% CI = {[}0.20 - 0.92{]}).
+
+Monthly days with anxiety, having a depression diagnosis, and age were
+all positively associated with greater odds of stroke.For each
+additional day heavily affected by anxiety,the odds of having had a
+stroke were 1.02 times higher, and for those who have been diagnosed
+with depression the odds of stroke were 2.05 times higher. Age had the
+strongest relationship to the odds of having had a stroke, with those
+aged over 65 years old having 95 times the odds of having had a stroke
+diagnosis than those who were between the ages of 18 and 24 years old.
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Logistic Regression Model Estimating Effects of Risk Factors \&
+Demographic Variables on Stroke Outcome Odds.}\tabularnewline
+\toprule
+Variable & OR (95\% CI) & P-Value\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Variable & OR (95\% CI) & P-Value\tabularnewline
+\midrule
+\endhead
+\textbf{Risk Factors} & &\tabularnewline
+~~~Non-Heavy Drinker & 1 (Baseline Factor) &\tabularnewline
+~~~Heavy Drinker & 0.989 (0.41 - 2.38) & 0.98\tabularnewline
+~~~Non-Smoker & 1 (Baseline Factor) &\tabularnewline
+~~~Former Smoker & 1.24 (0.91 - 1.70) & 0.18\tabularnewline
+~~~Smoker (Some days) & 1.65 (0.95 - 2.88) & 0.08\tabularnewline
+~~~Smoker (Daily) & 1.68 (1.12 - 2.53) & 0.01\tabularnewline
+~~~Monthly Days Anxious & 1.03 (1.01 - 1.04) &
+\textless{}0.01\tabularnewline
+~~~No Depression Diagnosis & 1 (Baseline Factor) &\tabularnewline
+~~~Depression Diagnosis & 2.12 (1.48 - 3.04) &
+\textless{}0.01\tabularnewline
+~~~Daily Sleep Hours & 0.91 (0.82 - 1.00) & 0.06\tabularnewline
+~~~Male & 1 (Baseline Factor) &\tabularnewline
+~~~Female & 0.77 (0.58 - 1.02) & 0.07\tabularnewline
+\textbf{Race/Ethnicity} & &\tabularnewline
+~~~Other Race / Non-Hispanic & 1 (Baseline Factor) &\tabularnewline
+~~~Hispanic & 1.42 (0.43 - 4.70) & 0.57\tabularnewline
+~~~Black Only / Non-Hispanic & 2.41 (0.88 - 6.62) & 0.09\tabularnewline
+~~~White Only / Non-Hispanic & 1.87 (0.73 - 4.83) & 0.20\tabularnewline
+~~~Multiracial / Non-Hispanic & 2.92 (0.90 - 9.50) & 0.08\tabularnewline
+\textbf{Age Group} & &\tabularnewline
+~~~Age 18 to 24 & 1 (Baseline Factor) &\tabularnewline
+~~~Age 25 to 34 & 3.92 (0.80 - 19.66) & 0.10\tabularnewline
+~~~Age 35 to 44 & 9.33 (2.00 - 43.51) & \textless{}0.01\tabularnewline
+~~~Age 45 to 54 & 12.35 (2.79 - 54.71) & \textless{}0.01\tabularnewline
+~~~Age 55 to 64 & 20.93 (4.80 - 91.34) & \textless{}0.01\tabularnewline
+~~~Age 65 or Older & 44.87 (10.36 - 194.43) &
+\textless{}0.01\tabularnewline
+\bottomrule
+\end{longtable}
+
+The effect of each significant risk factor, stratified by depression
+diagnosis, on the probability of having had a stroke is shown in Figure
+2. The probability of a person having a stroke increases with the number
+of days a person is significantly affected by anxiety. This probability
+is multiplied if a person has been diagnosed with depression. For
+non-smokers with no depression diagnosis who did not signifantly suffer
+from anxiety, the probability of having had a stroke approaches zero. If
+the same subject was diagnosed with depression, the probability of
+having had a stroke nears 5\%.
+
+The probability of having had a stroke is multiplied in daily smokers,
+beginning at approximately 5\% for daily smokers who have not been
+diagnosed with depression nor have suffered from significant anxiety.
+With a depression diagnosis, the probability originates at approximately
+7\% for subjects with zero days of anxiety and increases to 15\% for
+subjects who experienced thirty days of signiticant anxiety. This
+relationship is similar for subjects who currently smoke some days.
+
+\begin{figure}
+\centering
+\includegraphics{report_files/figure-latex/figWithCaption2-1.pdf}
+\caption{Effects of Anxious Days on Stroke Outcome, Stratified by
+Depression Diagnosis}
+\end{figure}
+
+\section{Conclusion}\label{conclusion}
+
+Beth's part here
+
+
+
+
+\newpage
+\singlespacing 
+\bibliography{../Data/Misc/bios.bib}
+
+\end{document}

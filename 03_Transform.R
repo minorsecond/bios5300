@@ -81,7 +81,7 @@ brfss.survey1 <- brfss.survey1 %>%
          alc.n.drinks.weekly = car::recode(X_DRNKWEK, "99900=NA"),
          alc.heavy.drinker = car::recode(X_RFDRHV5, "1='No'; 2='Yes'; 9=NA"),
          alc.heavy.drinker = as.factor(alc.heavy.drinker),
-         smoker.status = car::recode(X_SMOKER3, "1 = 'Current smoker - now smokes every day'; 2='Current smoker - now smokes some days'; 3='Former smoker'; 4='Never smoked'; 9=NA"),
+         smoker.status = car::recode(X_SMOKER3, "1 = 'Daily'; 2='Some days'; 3='Former Smoker'; 4='Never Smoked'; 9=NA"),
          smoker.status = as.factor(smoker.status),
          smoker.100.cigs.life = car::recode(SMOKE100, "1='Yes'; 2='No'; 7=NA; 9=NA"),
          smoker.100.cigs.life = as.factor(smoker.100.cigs.life),

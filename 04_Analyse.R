@@ -106,7 +106,7 @@ rownames(results$stroke.depression) <- c("No Stroke Diagnosis", "Stroke Diagnosi
 results$stroke.depression.p <- prop.table(results$stroke.depression, 1)
 results$chsq.by.depression <- svychisq(~diag.stroke+diag.depression, design = brfss.survey.design)
 
-results$stroke.smoker <- na.omit(svytable(~smoker.status + diag.stroke, design = brfss.survey.design))
+results$stroke.smoker <- na.omit(svytable(~diag.stroke + smoker.status, design = brfss.survey.design))
 #colnames(results$stroke.smoker) <- c("Non", "Depression Diagnosis")
 results$stroke.smoker.p <- prop.table(results$stroke.smoker, 1)
 results$chsq.by.smoker <- svychisq(~diag.stroke+smoker.status, design = brfss.survey.design, statistic = "Chisq" )
@@ -267,10 +267,10 @@ results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn, Total)) +
   labs(x = "Age Group")
 
 # Mosaic Plots
-mosaicplot(results$stroke.smoker, shade = T,
-           main = "Proportions of Stroke Diagnoses by Smoker Status",
-           ylab = "Stroke Diagnosis",
-           xlab = "Smoker Status")
+mosaic(results$stroke.smoker, shade = T,
+       main = "Proportions of Stroke Diagnoses by Smoker Status",
+       labeling_args = list(set_varnames = c(diag.stroke="Stroke Outcome", smoker.status="Smoker Status")),
+       spacing = 15)
 
 #  Maps -------------------
 results$total.strokes.by.state <- svyby(~diag.stroke, ~STATE, brfss.survey.design, svytotal, na.rm = T)
