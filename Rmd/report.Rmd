@@ -204,18 +204,22 @@ years old.
 Variable                                      | OR (95% CI)             | P-Value
 ------------                                  | --------------------    | -------
 **Risk Factors**                              ||
-&nbsp;&nbsp;&nbsp;Non-Heavy Drinker           | 1 (Baseline Factor)|
-&nbsp;&nbsp;&nbsp;Heavy Drinker               | 0.989 (0.41 - 2.38)     | 0.98
-&nbsp;&nbsp;&nbsp;Non-Smoker                  | 1 (Baseline Factor)|
-&nbsp;&nbsp;&nbsp;Former Smoker               | 1.24 (0.91 - 1.70)      | 0.18
-&nbsp;&nbsp;&nbsp;Smoker (Some days)          | 1.65 (0.95 - 2.88)      | 0.08
-&nbsp;&nbsp;&nbsp;Smoker (Daily)              | 1.68 (1.12 - 2.53)      | 0.01
-&nbsp;&nbsp;&nbsp;Monthly Days Anxious        | 1.03 (1.01 - 1.04)      | <0.01
-&nbsp;&nbsp;&nbsp;No Depression Diagnosis     | 1 (Baseline Factor)|
-&nbsp;&nbsp;&nbsp;Depression Diagnosis        | 2.12 (1.48 - 3.04)      | <0.01
-&nbsp;&nbsp;&nbsp;Daily Sleep Hours           | 0.91 (0.82 - 1.00)      | 0.06
-&nbsp;&nbsp;&nbsp;Male                        | 1 (Baseline Factor)|
-&nbsp;&nbsp;&nbsp;Female                      | 0.77 (0.58 - 1.02)      | 0.07
+&nbsp;&nbsp;&nbsp;*Drinking*            ||
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non-Heavy Drinker           | 1 (Baseline Factor)|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heavy Drinker               | 0.989 (0.41 - 2.38)     | 0.98
+&nbsp;&nbsp;&nbsp;*Smoking*             ||
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non-Smoker                  | 1 (Baseline Factor)|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Former Smoker               | 1.24 (0.91 - 1.70)      | 0.18
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smoker (Some days)          | 1.65 (0.95 - 2.88)      | 0.08
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Smoker (Daily)              | 1.68 (1.12 - 2.53)      | 0.01
+&nbsp;&nbsp;&nbsp;*Mental Health*       ||
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monthly Days Anxious        | 1.03 (1.01 - 1.04)      | <0.01
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Depression Diagnosis     | 1 (Baseline Factor)|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Depression Diagnosis        | 2.12 (1.48 - 3.04)      | <0.01
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Daily Sleep Hours           | 0.91 (0.82 - 1.00)      | 0.06
+&nbsp;&nbsp;&nbsp;*Sex*                       ||
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Male                  | 1 (Baseline Factor)|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Female                 | 0.77 (0.58 - 1.02)      | 0.07
 **Race/Ethnicity**                            ||
 &nbsp;&nbsp;&nbsp;Other Race / Non-Hispanic   | 1 (Baseline Factor)|
 &nbsp;&nbsp;&nbsp;Hispanic                    | 1.42  (0.43 - 4.70)     | 0.57
