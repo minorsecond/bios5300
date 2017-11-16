@@ -1,4 +1,5 @@
-source("./Functions/detachAll.R")
+source("./Functions/detachAll.R") # Detach all packages to help with plyr/dplyr issues
+detachAllPackages()
 library(foreign)
 library(openxlsx)
 library(fiftystater)
@@ -6,7 +7,7 @@ library(fiftystater)
 # Download the 2016 BRFSS Data from CDC ----
 OUTFILE = "./Data/Raw/LLCP2016.xpt "
 URL <- "https://www.cdc.gov/brfss/annual_data/2016/files/LLCP2016XPT.zip"
-if (!file.exists(OUTFILE)) {
+if (!file.exists(OUTFILE)) {  # Only download if file doesn't already exist
   ZIPFILE = "./Data/Raw/LLCP2016XPT.zip"
   download.file(URL, ZIPFILE, method="auto")
   unzip(zipfile = ZIPFILE, overwrite = TRUE)  # Extract data
@@ -16,7 +17,7 @@ if (!file.exists(OUTFILE)) {
   rm(OUTFILE)
   rm(URL)
   file.remove(ZIPFILE)
-} else {
+} else {  # If file exists, read it into memory
   brfss <- read.xport(OUTFILE)
   rm(OUTFILE)
   rm(URL)}
@@ -41,9 +42,6 @@ census <- census[ , c(1, 10)]  # Only keep state name column and 2016 population
 colnames(census) <- c("STATE", "Pop.2016")  # Replace column names
 census$STATE <- substring(census$STATE, 2)  # Remove leading '.' character from state names
 
+# Cleanup
 rm(CENSUS_PATH)
-
-# Get the state data ----
-us_states <- states(year = 2016)
-
 gc()

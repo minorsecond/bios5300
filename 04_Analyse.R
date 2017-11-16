@@ -12,7 +12,10 @@ library(stargazer)
 library(scales)
 library(effects)
 library(vcd)
-source("./Functions/pub_graphs.R")
+source("./Functions/pub_graphs.R")  # Nice graphs
+
+# a single-PSU stratum makes no contribution to the variance 
+# (for multistage sampling it makes no contribution at that level of sampling). 
 options(survey.lonely.psu = "certainty")
 
 #Disable scientific notation
@@ -22,44 +25,39 @@ options(scipen=999)
 results <- list()
 
 # Load the transformed data ----
+print("Reading transformed.rds into memory...")
 readRDS("Data/transformed.rds") -> brfss.survey.design
 
 # Specific transformations ----
 # Relevel some of the factors so that the regression output is easier to interpret.
+print(("Setting logistic regression baseline levels..."))
 brfss.survey.design$variables$sex <- relevel(brfss.survey.design$variables$sex, ref = "Male")
-brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
-brfss.survey.design$variables$diag.depression <- relevel(brfss.survey.design$variables$diag.depression, ref = "No")
-brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never smoked")
+brfss.survey.design$variables$diag.depression <- relevel(brfss.survey.design$variables$diag.depression, ref = "No Depression Diagnosis")
+brfss.survey.design$variables$smoker.status <- relevel(brfss.survey.design$variables$smoker.status, ref = "Never Smoked")
 brfss.survey.design$variables$race.eth <- relevel(brfss.survey.design$variables$race.eth, ref = "Other race only, Non-Hispanic")
 brfss.survey.design$variables$age.grp <- relevel(brfss.survey.design$variables$age.grp, ref = "Age 18 to 24")
-brfss.survey.design$variables$edu.level <- relevel(brfss.survey.design$variables$edu.level, ref = "Never attended school or only kindergarten")
-brfss.survey.design$variables$exercises.yn <- relevel(brfss.survey.design$variables$exercises.yn, ref = "No")
-brfss.survey.design$variables$veteran <- relevel(brfss.survey.design$variables$veteran, ref = "Non-Veteran")
-brfss.survey.design$variables$diag.nonskin.cancer <- relevel(brfss.survey.design$variables$diag.nonskin.cancer, ref = "No")
-brfss.survey.design$variables$current.cancer.treatment <- relevel(brfss.survey.design$variables$current.cancer.treatment, ref = "No - Havent Started")
-brfss.survey.design$variables$health.care.coverage.source <- relevel(brfss.survey.design$variables$health.care.coverage.source, ref = "No Coverage")
-brfss.survey.design$variables$time.since.care.coverage <- relevel(brfss.survey.design$variables$time.since.care.coverage, ref = "Never")
-brfss.survey.design$variables$diabetes <- relevel(brfss.survey.design$variables$diabetes, ref = "No")
+brfss.survey.design$variables$alc.heavy.drinker <- relevel(brfss.survey.design$variables$alc.heavy.drinker, ref = "No")
 
 # Models ----
 # Logistic regression on stroke diagnosis status ----
+print("Running binomial logistic regression...")
 results$stroke.binom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
-                                  days.anxious + diag.depression + daily.sleep.hrs + 
-                                  sex + edu.level + income + race.eth + age.grp,
-                                brfss.survey.design, family = "binomial")
+                                 days.anxious + diag.depression + daily.sleep.hrs + 
+                                 sex + age.grp + race.eth,
+                               brfss.survey.design, family = "binomial")
 
+print("Running quasibinomial logistic regression...")
 results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + 
                                   days.anxious + diag.depression + daily.sleep.hrs + 
                                   sex + age.grp + race.eth,
                                 brfss.survey.design, family = "quasibinomial")
 
 # Calculate OR and 95% CI for estimate
+print("Calculating OR & 95% CI...")
 results$stroke.qb.ORCI <- exp(cbind(OR = coef(results$stroke.qbinom), 
                                     confint(results$stroke.qbinom)))
 results$stroke.b.ORCI <- exp(cbind(OR = coef(results$stroke.binom), 
                                    confint(results$stroke.binom)))
-
-results$logistic.anova <- anova(results$stroke.qbinom)
 
 # Write report to file in ./Output/Reports/logit.html
 OR.vector <- exp(results$stroke.qbinom$coef)
@@ -78,14 +76,14 @@ stargazer(results$stroke.qbinom,
 
 # Tables ----
 
-# Summary statistics ----
+# Summary statistics
+print("Calculating mean values for sleep, days anxious and total strokes.")
 results$mean.sleep.by.outcome <- svyby(~daily.sleep.hrs, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-results$mean.bmi.by.outcome <- svyby(~bmi, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$mean.days.anxious.by.outcome <- svyby(~days.anxious, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
-results$mean.n.drinks.weekly.by.outcome <- svyby(~alc.n.drinks.weekly, ~diag.stroke, brfss.survey.design, svyciprop,vartype="ci",method="mean", na.rm = T)
 results$total.strokes <- svytotal(~diag.stroke, design = brfss.survey.design, na.rm=T)
 
 # Two-way tables & Chi Sq. Tests----
+print("Creating two-way tables...")
 results$stroke.sex <- na.omit(svytable(~diag.stroke + sex, 
                                        design = brfss.survey.design))
 colnames(results$stroke.sex) <- c("Male", "Female")
@@ -96,15 +94,12 @@ results$chsq.by.sex <- svychisq(~diag.stroke+sex,
 
 results$stroke.heavy.drinker <- na.omit(svytable(~diag.stroke + alc.heavy.drinker, 
                                                  design = brfss.survey.design))
-colnames(results$stroke.heavy.drinker) <- c("Non-heavy Drinker", "Heavy Drinker")
-rownames(results$stroke.heavy.drinker) <- c("No stroke diagnosis", "Stroke diagnosis")
+colnames(results$stroke.heavy.drinker) <- c("Non-heavy Drinker", 
+                                            "Heavy Drinker")
+rownames(results$stroke.heavy.drinker) <- c("No stroke diagnosis", 
+                                            "Stroke diagnosis")
 results$stroke.heavy.drinker.p <- prop.table(results$stroke.heavy.drinker, 
                                              2)
-
-results$stroke.veteran <- na.omit(svytable(~diag.stroke + veteran, design = brfss.survey.design))
-colnames(results$stroke.veteran) <- c("Non-Veteran", "Veteran")
-rownames(results$stroke.veteran) <- c("No stroke diagnosis", "Stroke diagnosis")
-results$stroke.veteran.p <- prop.table(results$stroke.veteran, 1)
 
 results$stroke.depression <- na.omit(svytable(~diag.stroke + diag.depression, 
                                               design = brfss.survey.design))
@@ -118,7 +113,7 @@ results$chsq.by.depression <- svychisq(~diag.stroke+diag.depression,
 
 results$stroke.smoker <- na.omit(svytable(~diag.stroke + smoker.status, 
                                           design = brfss.survey.design))
-#colnames(results$stroke.smoker) <- c("Non", "Depression Diagnosis")
+
 results$stroke.smoker.p <- prop.table(results$stroke.smoker, 
                                       1)
 results$chsq.by.smoker <- svychisq(~diag.stroke+smoker.status, 
@@ -126,6 +121,7 @@ results$chsq.by.smoker <- svychisq(~diag.stroke+smoker.status,
                                    statistic = "Chisq" )
 
 # Plots ----
+print("Creating boxplots...")
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, 
                                 design = brfss.survey.design, 
                                 col = brewer.pal(2, 
@@ -144,15 +140,8 @@ results$box.anxious <- svyboxplot(days.anxious ~ diag.stroke,
                                   ylab = "Days of Anxiety",
                                   main = "Days Affected by Anxiety and Stroke Outcome")
 
-results$box.ndrinks.weekly <- svyboxplot(alc.n.drinks.weekly ~ diag.stroke, 
-                                         design = brfss.survey.design,
-                                         col = brewer.pal(2, 
-                                                          "Set3"), 
-                                         all.outliers = F,
-                                         xlab = "Outcome", 
-                                         ylab = "Number of Drinks Weekly", 
-                                         main = "Number of Alcoholic Drinks Weekly and Stroke Outcome")
 # Effects
+print("Creating effects plots...")
 results$effects.age.income.sex <- Effect(focal.predictors = c("income", 
                                                               "age.grp",
                                                               "sex"), 
@@ -174,6 +163,7 @@ results$effects.anxiety.depression.smoking <- Effect(focal.predictors = c("days.
                                                      mod=results$stroke.qbinom)
 
 # Age Group & Stroke Probability Graph
+print("Creating graphs...")
 results$agegrp.odds.bar <- ggplot(ggpredict(results$stroke.qbinom, 
                                             "age.grp"), 
                                   aes(factor(x, labels = c("18 to 24",
@@ -347,6 +337,7 @@ results$bargraph_age.grp <- ggplot(results$total.age.groups, aes(rn,
   labs(x = "Age Group")
 
 # Mosaic Plots
+print("Creating mosaic plot...")
 mosaic(results$stroke.smoker, shade = T,
        main = "Proportions of Stroke Diagnoses by Smoker Status",
        labeling_args = list(set_varnames = c(diag.stroke="Stroke Outcome", 
@@ -354,6 +345,7 @@ mosaic(results$stroke.smoker, shade = T,
        spacing = 15)
 
 #  Maps -------------------
+print("Creating map...")
 results$total.strokes.by.state <- svyby(~diag.stroke, 
                                         ~STATE, 
                                         brfss.survey.design, 
@@ -426,6 +418,7 @@ results$map.stroke.prevalence <- ggplot(stroke.prevalence,
                "2987.0 - 3766.6    "))
 
 # Save the results object ----
+print("Saving all results...")
 saveRDS(results, 
         file = "Data/results.rds")
 
