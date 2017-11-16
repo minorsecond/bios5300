@@ -1,3 +1,6 @@
+# This script parses the data downloaded in 01_Import.R, creates the survey
+# design object, and saves it to ./Data/transformed.rds for use in step 4.
+
 library(Hmisc)
 library(classInt)
 library(dplyr)

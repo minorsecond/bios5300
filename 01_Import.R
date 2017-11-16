@@ -1,3 +1,7 @@
+# This script downloads the required data from the internet and saves it to ./Data/Raw
+#
+#
+
 source("./Functions/detachAll.R") # Detach all packages to help with plyr/dplyr issues
 detachAllPackages()
 library(foreign)

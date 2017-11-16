@@ -1,3 +1,7 @@
+# This script analyzes the data parsed out in 03_Transform.R and
+# saves it out to ./Data/results.rds for use in the RMarkdown
+# script.
+
 library(ggplot2)
 library(ggeffects)
 library(srvyr)
