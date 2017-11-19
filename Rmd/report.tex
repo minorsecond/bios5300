@@ -154,7 +154,7 @@ Odds: A Cross-Sectional Study},
 
     \vskip 8.5pt % \small 
 
-\noindent Although numerous studies have investigated the relationships between
+\noindent Though numerous studies have investigated the relationships between
 lifestyle risk factors and stroke outcome, few have done so while
 controlling as age and race/ethnicity range. Utilizing quasi-binomial
 logistic regression, we show that the odds of having had a stroke
@@ -174,8 +174,7 @@ depression diagnosis.
 \vskip 6.5pt
 
 
-\noindent  \hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\noindent  \section{Introduction}\label{introduction}
 
 Natalie's text here.
 
@@ -185,24 +184,23 @@ Natalie's text here.
 \caption{2016 United States Stroke Prevalence}
 \end{figure}
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
-\hypertarget{joshs-text}{%
-\subsection{Josh's Text}\label{joshs-text}}
+\subsection{Josh's Text}\label{joshs-text}
 
-\hypertarget{survey-weighting}{%
-\subsection{Survey Weighting}\label{survey-weighting}}
+\subsection{Survey Weighting}\label{survey-weighting}
 
 The BRFSS survey data were weighted using the raking method, which is a
 two-part methodology to help insure unbiased results by accounting for
 noncoverage and nonresponse bias and forcing the total number of cases
 to equal the population estimate of each state in the United States
-\citep{CentersforDiseaseControlandPrevention2007}.
+\citep{CentersforDiseaseControlandPrevention2007a}. Raking works by
+repeatedly adjusting weight across a set of selected variables until the
+weights converge and the survey population totals are equal to the
+census population totals for each selected variable \citep{Fricker1993}.
 
-\hypertarget{dependent-and-independent-variables}{%
 \subsection{Dependent and Independent
-Variables}\label{dependent-and-independent-variables}}
+Variables}\label{dependent-and-independent-variables}
 
 The dependent variable, stroke outcome, was recoded to a binary variable
 for use in a logistic regression model. Depression diagnosis and heavy
@@ -243,8 +241,7 @@ month did you have at least one drink of any alcoholic beverage such as
 beer, wine, a malt beverage or liquor?''
 \citep{CentersforDiseaseControlandPrevention2007}.
 
-\hypertarget{logistic-regression-model}{%
-\subsection{Logistic Regression Model}\label{logistic-regression-model}}
+\subsection{Logistic Regression Model}\label{logistic-regression-model}
 
 The first model used in calculating the logistic regression utilized the
 standard binomial function to predict the log odds of binary outcome
@@ -259,11 +256,10 @@ formula
 the data were overdispersed, possibly leading to unstable estimates. To
 account for the overdispersion, \(\phi\) was included as a model
 parameter, giving the formula
-\[P(X=k)={n \choose k}p(p+k\phi)^{k-1}(1-p-k\phi)^{n-k}.\]
+\[P(k)={n \choose k}p(p+k\phi)^{k-1}(1-p-k\phi)^{n-k}.\]
 {[}\textbf{Explain the quasi-binomial family more}{]}
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
 The weighted number of strokes in the United States in 2016 was
 8,020,080, representing approximately 2.5\% of the total 2016 United
@@ -286,7 +282,7 @@ Stroke & 3.13\% & 3.20\%\tabularnewline
 \bottomrule
 \end{longtable}
 
-A chi-squared test of independence revealed that the there is not
+A chi-squared test of independence revealed that there there is not
 statistically significant evidence that stroke outcome and sex is
 independent from one another at an alpha level of 0.05, \(\chi^2\) (3,
 \(N\)=486,303) = 1.73, \(p\)=0.48.
@@ -359,28 +355,26 @@ Number Drinks Weekly & No Stroke & 79.07\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{logistic-regression-model-1}{%
 \subsection{Logistic Regression
-Model}\label{logistic-regression-model-1}}
+Model}\label{logistic-regression-model-1}
 
 The binomial logistic regression model resulted in a \(\phi\) value of
 2.52, indicating that there is overdispersion in the estimates and the
 quasi-binomial function should be used instead.
 
 The results of the quasi-binomial logistic regression (Table 4) indicate
-that being female is a protective factor (OR = 0.71, 95\% CI = {[}0.51 -
-0.98{]}), as well as having an annual household income between \$35,000
-and \$75,000 (OR = 0.48, 95\% CI = {[}0.25 - 0.92{]}) or over \$75,000
-(OR = 0.41, 95\% CI = {[}0.20 - 0.92{]}).
+that, controlling for age, race/ethnicity, and sex, Several of the
+tested risk factors were significantly correlated with stroke outcome.
+Being a daily smoker, Monthly days with anxiety, and diagnosed
+depression were all positively associated with greater odds of stroke.
 
-Monthly days with anxiety, having a depression diagnosis, and age were
-all positively associated with greater odds of stroke.For each
-additional day heavily affected by anxiety,the odds of having had a
-stroke were 1.02 times higher, and for those who have been diagnosed
-with depression the odds of stroke were 2.05 times higher. Age had the
-strongest relationship to the odds of having had a stroke, with those
-aged over 65 years old having 95 times the odds of having had a stroke
-diagnosis than those who were between the ages of 18 and 24 years old.
+Daily cigarette smokers had 1.68 times the odds of having had a stroke
+than those who have never smoked cigarettes. For each additional day
+heavily affected by anxiety,the odds of having had a stroke were 1.03
+times higher, and for those who have been diagnosed with depression the
+odds of stroke were 2.12 times higher. Of the control variables, age of
+25 years old and above were the only factors significantly associated
+with stroke outcome, with an odds ratio that increased with age.
 
 \begin{longtable}[]{@{}lll@{}}
 \caption{Logistic Regression Model Estimating Effects of Risk Factors \&
@@ -454,10 +448,35 @@ relationship is similar for subjects who currently smoke some days.
 Depression Diagnosis and Smoker Status}
 \end{figure}
 
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{Conclusion}\label{conclusion}
 
-Beth's part here
+Our study assessed the association between heavy drinking, anxiety,
+depression on stroke odds. We used the 2016 Behavioral Risk Factor
+Surveillance System dataset from the CDC. There was a significant
+difference between being a daily smoking and odds of a stroke as the
+p-value was .01. Also, there was a significant difference for anxiety,
+and depression for the odds of a stroke, p-value was less than .01 for
+both variables. We found know no significant different between race or
+the amount of sleep hours someone receives., and whether or not an
+individual is a heavy drinker.
+
+Our study has a specific limitation due to its study design. The study
+was a cross-sectional one, causality and risk cannot be inferred from
+our data. Each variable tested affected one another, so heavy drinking
+influenced the variables anxiety and depression. And anxiety can affect
+heavy drinking and depression. The influence of variables on each other
+demonstrates that causality cannot be inferred in a cross-sectional
+study.
+
+In conclusion, variables depression, anxiety, and being a daily smoker
+all were significantly different for stroke odds. This conclusion means
+that an individual who is either a daily smoker, diagnosed with
+depression or anxiety all have an increased change of having a stroke.
+The 2016 BRFSS dataset provided a large population data set to help
+monitor variables that affect stroke odds. Future studies can look at
+the association can look further at the effect of mental health
+diagnosis on stroke odds, as well as how smoking can increase an
+individual's odds of a stroke.
 
 
 
@@ -466,4 +485,6 @@ Beth's part here
 \singlespacing 
 \bibliography{../Data/Misc/bios.bib}
 
+\appendix
+\section{Code}
 \end{document}

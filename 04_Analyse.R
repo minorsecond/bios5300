@@ -18,6 +18,25 @@ library(effects)
 library(vcd)
 source("./Functions/pub_graphs.R")  # Nice graphs
 
+plot_odds<-function(x, title = NULL){
+  tmp<-data.frame(cbind(exp(coef(x)), exp(confint(x))))
+  odds<-tmp[-1,]
+  names(odds)<-c('OR', 'lower', 'upper')
+  odds$vars<-row.names(odds)
+  ticks<-c(seq(.1, 1, by =.1), seq(0, 10, by =1), seq(10, 100, by =10))
+  
+  g <- ggplot(odds, aes(y= OR, x = reorder(vars, OR))) +
+    geom_point() +
+    geom_errorbar(aes(ymin=lower, ymax=upper), width=.2) +
+    scale_y_log10(breaks=ticks, labels = ticks) +
+    geom_hline(yintercept = 1, linetype=2) +
+    coord_flip() +
+    labs(title = title, x = 'Variables', y = 'OR') +
+    theme_bw()
+  
+  return(g)
+}
+
 # a single-PSU stratum makes no contribution to the variance
 # (for multistage sampling it makes no contribution at that
 # level of sampling).
@@ -127,6 +146,8 @@ results$chsq.by.smoker <- svychisq(~diag.stroke + smoker.status,
   design = brfss.survey.design, statistic = "Chisq")
 
 # Plots ----
+plot_odds(results$stroke.qbinom)
+
 print("Creating boxplots...")
 results$box.sleep <- svyboxplot(daily.sleep.hrs ~ diag.stroke, 
   design = brfss.survey.design, col = brewer.pal(2, "Set3"), 
@@ -148,6 +169,9 @@ results$effects.age.sex <- Effect(focal.predictors = c("age.grp",
 
 results$effects.anxiety.depression <- Effect(focal.predictors = c("days.anxious", 
   "sex", "diag.depression"), mod = results$stroke.qbinom)
+
+results$effects.sleep.depression <- Effect(focal.predictors = c("daily.sleep.hrs", 
+                                                                  "smoker.status", "diag.depression"), mod = results$stroke.qbinom)
 
 results$effects.anxiety.depression.smoking <- Effect(focal.predictors = c("days.anxious", 
   "smoker.status", "diag.depression"), mod = results$stroke.qbinom)
@@ -244,11 +268,13 @@ results$bargraph_age.grp <- ggplot(results$total.age.groups,
     "65+ Years Old")) + ggtitle("2016 United States Age Groups", 
   subtitle = "Weighted BRFSS Data") + labs(x = "Age Group")
 
+
+
 # Mosaic Plots
 print("Creating mosaic plot...")
 mosaic(results$stroke.smoker, shade = T, main = "Proportions of Stroke Diagnoses by Smoker Status", 
   labeling_args = list(set_varnames = c(diag.stroke = "Stroke Outcome", 
-    smoker.status = "Smoker Status")), spacing = 15)
+    smoker.status = "Smoker Status")), spacing = spacing_equal(unit(1, "lines")))
 
 # Maps -------------------
 print("Creating map...")

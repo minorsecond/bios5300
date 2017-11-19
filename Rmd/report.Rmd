@@ -38,7 +38,7 @@ library(knitr)
 #library(pander)
 #library(DT)
 
-results <- readRDS("../Data/results.rds")
+results <- readRDS("/storage/Research/bios5300/Data/results.rds")
 colorPalette <- results$colorPalette
 
 opts_chunk$set(echo = F,
@@ -267,4 +267,8 @@ plot(results$effects.anxiety.depression.smoking,
 ```
 
 # Conclusion
-Beth's part here
+Our study assessed the association between heavy drinking, anxiety, depression on stroke odds. We used the 2016 Behavioral Risk Factor Surveillance System dataset from the CDC. There was a significant difference between being a daily smoking and odds of a stroke as the p-value was .01. Also, there was a significant difference for anxiety, and depression for the odds of a stroke, p-value was less than .01 for both variables. We found know no significant different between race or the amount of sleep hours someone receives., and whether or not an individual is a heavy drinker. 
+
+Our study has a specific limitation due to its study design. The study was a cross-sectional one, causality and risk cannot be inferred from our data. Each variable tested affected one another, so heavy drinking influenced the variables anxiety and depression. And anxiety can affect heavy drinking and depression. The influence of variables on each other demonstrates that causality cannot be inferred in a cross-sectional study. 
+
+In conclusion, variables depression, anxiety, and being a daily smoker all were significantly different for stroke odds. This conclusion means that an individual who is either a daily smoker, diagnosed with depression or anxiety all have an increased change of having a stroke. The 2016 BRFSS dataset provided a large population data set to help monitor variables that affect stroke odds. Future studies can look at the association can look further at the effect of mental health diagnosis on stroke odds, as well as how smoking can increase an individual’s odds of a stroke. 
