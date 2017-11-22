@@ -80,12 +80,17 @@ results$stroke.qbinom <- svyglm(diag.stroke ~ alc.heavy.drinker +
   smoker.status + days.anxious + diag.depression + daily.sleep.hrs + 
   sex + age.grp + race.eth, brfss.survey.design, family = "quasibinomial")
 
+results$stroke.nandySuggestions <- svyglm(diag.stroke ~ alc.heavy.drinker + smoker.status + days.anxious + diag.depression + daily.sleep.hrs + 
+                                  sex*daily.sleep.hrs + sex*days.anxious + age.grp + race.eth, brfss.survey.design, family = "quasibinomial")
+
 # Calculate OR and 95% CI for estimate
 print("Calculating OR & 95% CI...")
 results$stroke.qb.ORCI <- exp(cbind(OR = coef(results$stroke.qbinom), 
   confint(results$stroke.qbinom)))
 results$stroke.b.ORCI <- exp(cbind(OR = coef(results$stroke.binom), 
   confint(results$stroke.binom)))
+results$stroke.nandy.ORCI <- exp(cbind(OR = coef(results$stroke.nandySuggestions), 
+                                   confint(results$stroke.nandySuggestions)))
 
 # Write report to file in ./Output/Reports/logit.html
 OR.vector <- exp(results$stroke.qbinom$coef)
