@@ -3,6 +3,25 @@
 \newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
 \usepackage[]{mathpazo}
 
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{listings}
+\lstset{
+    language=R,
+    basicstyle=\fontfamily{lmvtt}\selectfont\small\color{blue},
+    columns=fullflexible,
+    breaklines,
+    %numbers=left,
+    %stepnumber=1,
+    %numbersep=5pt,                   
+    % numberstyle=\tiny,                %% adjust the size of numbers
+    morekeywords={assert}
+    %caption={A simple example},
+    %captionpos=b,                       %% sets the caption-position to bottom,
+    %xleftmargin=\parindent,
+}
+
+
 
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
@@ -525,4 +544,13 @@ individual's odds of a stroke.
 
 \appendix
 \section{Code}
+\fontsize{8}{12}\selectfont
+\subsection{Import Data}
+\lstinputlisting{/storage/Research/bios5300/Data/Misc/import.r}
+\rule{0.5\textwidth}{.4pt}
+\subsection{Parse Data}
+\lstinputlisting{/storage/Research/bios5300/Data/Misc/transform.r}
+\rule{0.5\textwidth}{.4pt}
+\subsection{Analyse Data}
+\lstinputlisting{/storage/Research/bios5300/Data/Misc/analyse.r}
 \end{document}
