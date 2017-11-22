@@ -50,11 +50,11 @@ knitr::opts_chunk$set(fig.width = 12,
 ```
 
 # Introduction
-Natalie's text here.
+Strokes nearly affect 800,000 people in the U.S every year and is the fifth leading cause of death in the U.S (Stroke Association, 2017). Despite increased efforts on education and general public knowledge about stroke and other cardiovascular risk diseases, the prevalence rates have shown little improvement within the past ten years (AHA Statistical Update, 2015). Previous research has shown that a variety of controllable risk factors that are strongly associated with stroke outcome. Although behaviors such as smoking and poor diet have been well-known risk factors, other factors such as stress, lack of sleep, depression, and anxiety still have unclear associations (Risk Factors Stroke Association, 2017). 
 
-``` {r figWithCaption, fig.cap="2016 United States Stroke Prevalence", echo=F}
-results$map.stroke.prevalence
-```
+Stress, lack of sleep, and mental disorders such as depression and anxiety are issues prominent throughout the United States.  Anxiety is the most common mental illness and approximately 18% of the U.S population is affected while depression affects nearly 7% of adults (ADAA, 2017). Those who are diagnosed with anxiety also have a 50% chance of being diagnosed with depression and vice versa (ADAA, 2017). Furthermore, approximately, 30% of Americans suffer from lack of sleep (CDC, 2017).  Although average stress levels have decreased since the recession, the average stress scores for American adults is still at moderate levels and is increased with lower household incomes (APA, 2015). Each of these factors has a considerable significance to public health as issues on their own. If someone is suffering from multiple risk factors, the risk of stroke could be significant and possibly result in death. 
+
+The goal of this study is to test the if there is an association between the different risk factors, particularly with stress, lack of sleep, depression, and anxiety, with the outcome stroke. This will be compared to previous trends in the same survey data to see if results are consistent and hopefully contribute additional knowledge. This will be determined using a chi squared analysis and logistics regressions collected from the BRFSS National Survey. The BRFSS National Survey collects data from 50 states, D.C, and the even throughout the territories collecting telephone survey data. It is in partnership with the CDC and has been useful for providing large quantities of health related data (CDC, 2014). The results of this study will be compared to previous trends in the same survey data to see if results are consistent and hopefully contribute additional knowledge to help prevent stroke and improve quality of life. 
 
 # Methods
 ## Josh's Text
