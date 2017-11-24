@@ -18,7 +18,8 @@ output:
   html_document:
     df_print: paged
 biblio-style: apa
-fontfamily: mathpazo
+#fontfamily: mathpazo
+fontfamily: mathptmx
 fontsize: 11pt
 geometry: margin=1in
 keywords: Stroke, Alcohol, Smoking, Anxiety, Depression
@@ -101,7 +102,7 @@ standard binomial function to predict the log odds of binary outcome $k$. The
 binomial formula, is given as
 $$P(k)={n \choose k}p^{k}(1-p)^{n-k},$$
 where $k$ represents a stroke outcome, $n$ represents the sample size, and $p$ 
-is the probability that a stroke will occur.
+is the probability that a stroke will occur. The result of the logistic regression model were then exponentiated to produce the odds ratios (OR) reported within this paper.
 
 # Results
 
