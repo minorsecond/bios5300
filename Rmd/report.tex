@@ -192,8 +192,9 @@ depression diagnosis.
 
 \vskip 6.5pt
 
-\doublespacing
-\noindent  \section{Introduction}\label{introduction}
+
+\noindent  \hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
 
 Strokes nearly affect 800,000 people in the United States every year and
 are the fifth leading cause of death in the United States
@@ -235,7 +236,8 @@ cellphones. It is in partnership with the CDC and has been useful for
 providing large quantities of health related data
 \citep{CentersforDiseaseControlandPrevention2014}.
 
-\section{Methods}\label{methods}
+\hypertarget{methods}{%
+\section{Methods}\label{methods}}
 
 The BRFSS survey data were weighted using the raking method, which is a
 two-part methodology to help insure unbiased results by accounting for
@@ -246,8 +248,9 @@ repeatedly adjusting weight across a set of selected variables until the
 weights converge and the survey population totals are equal to the
 census population totals for each selected variable \citep{Fricker1993}.
 
+\hypertarget{dependent-and-independent-variables}{%
 \subsection{Dependent and Independent
-Variables}\label{dependent-and-independent-variables}
+Variables}\label{dependent-and-independent-variables}}
 
 The dependent variable, stroke outcome, was recoded to a binary variable
 for use in a logistic regression model. Depression diagnosis and heavy
@@ -288,7 +291,8 @@ month did you have at least one drink of any alcoholic beverage such as
 beer, wine, a malt beverage or liquor?''
 \citep{CentersforDiseaseControlandPrevention2007}.
 
-\subsection{Logistic Regression Model}\label{logistic-regression-model}
+\hypertarget{logistic-regression-model}{%
+\subsection{Logistic Regression Model}\label{logistic-regression-model}}
 
 The first model used in calculating the logistic regression utilized the
 standard binomial function to predict the log odds of binary outcome
@@ -297,7 +301,8 @@ standard binomial function to predict the log odds of binary outcome
 outcome, \(n\) represents the sample size, and \(p\) is the probability
 that a stroke will occur.
 
-\section{Results}\label{results}
+\hypertarget{results}{%
+\section{Results}\label{results}}
 
 The weighted number of strokes in the United States in 2016 was
 8,020,080, representing approximately 2.5\% of the total 2016 United
@@ -393,8 +398,9 @@ Number Drinks Weekly & No Stroke & 79.07\tabularnewline
 \bottomrule
 \end{longtable}
 
+\hypertarget{logistic-regression-model-1}{%
 \subsection{Logistic Regression
-Model}\label{logistic-regression-model-1}
+Model}\label{logistic-regression-model-1}}
 
 The binomial logistic regression model resulted in a \(\phi\) value of
 2.52, indicating that there is overdispersion in the estimates and the
@@ -466,17 +472,17 @@ diagnosis, on the probability of having had a stroke is shown in Figure
 2. The probability of a person having a stroke increases with the number
 of days a person is significantly affected by anxiety. This probability
 is multiplied if a person has been diagnosed with depression. For
-non-smokers with no depression diagnosis who did not signifantly suffer
-from anxiety, the probability of having had a stroke approaches zero. If
-the same subject was diagnosed with depression, the probability of
-having had a stroke nears 5\%.
+non-smokers with no depression diagnosis who did not significantly
+suffer from anxiety, the probability of having had a stroke approaches
+zero. If the same subject was diagnosed with depression, the probability
+of having had a stroke nears 5\%.
 
 The probability of having had a stroke is multiplied in daily smokers,
 beginning at approximately 5\% for daily smokers who have not been
 diagnosed with depression nor have suffered from significant anxiety.
 With a depression diagnosis, the probability originates at approximately
 7\% for subjects with zero days of anxiety and increases to 15\% for
-subjects who experienced thirty days of signiticant anxiety. This
+subjects who experienced thirty days of significant anxiety. This
 relationship is similar for subjects who currently smoke some days.
 
 \begin{figure}
@@ -486,7 +492,8 @@ relationship is similar for subjects who currently smoke some days.
 Depression Diagnosis and Smoker Status}
 \end{figure}
 
-\section{Conclusion}\label{conclusion}
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
 
 Our study assessed the association between heavy drinking, anxiety,
 depression on stroke odds. Using the 2016 Behavioral Risk Factor
@@ -519,7 +526,7 @@ subject the same desire to ``save face.''
 Reducing the incidence of stroke is an important goal of public health
 that would result in a vast reduction of the health care burden. Our
 findings provide researchers and policymakers a set of variables that
-should be further investigated in order to elucidate causitive
+should be further investigated in order to elucidate causative
 relationships that may occur between these risk factors and stroke
 outcome. Future studies should look further at the effect of mental
 health diagnosis on stroke odds, as well as how smoking can increase an
@@ -533,15 +540,14 @@ individual's odds of a stroke.
 \bibliography{../Data/Misc/bios.bib}
 
 \appendix
-\singlespacing
 \section{Code}
-\fontsize{8}{12}\selectfont
-\subsection{Import Data}
-\lstinputlisting{/storage/Research/bios5300/Data/Misc/import.r}
-\rule{0.5\textwidth}{.4pt}
-\subsection{Parse Data}
-\lstinputlisting{/storage/Research/bios5300/Data/Misc/transform.r}
-\rule{0.5\textwidth}{.4pt}
-\subsection{Analyse Data}
-\lstinputlisting{/storage/Research/bios5300/Data/Misc/analyse.r}
+%\fontsize{8}{12}\selectfont
+%\subsection{Import Data}
+%\lstinputlisting{/storage/Research/bios5300/Data/Misc/import.r}
+%\rule{\textwidth}{.4pt}
+%\subsection{Parse Data}
+%\lstinputlisting{/storage/Research/bios5300/Data/Misc/transform.r}
+%\rule{\textwidth}{.4pt}
+%\subsection{Analyse Data}
+%\lstinputlisting{/storage/Research/bios5300/Data/Misc/analyse.r}
 \end{document}

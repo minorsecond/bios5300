@@ -194,7 +194,7 @@ factors significantly associated with stroke outcome, with an odds ratio
 that increased with age. 
 
 Variable                                                  | OR (95% CI)             | P-Value
-------------                                              | --------------------    | -------
+-----------------------------------------------------------------------------------------------|-------------------------|--------
 **Risk Factors**                                          ||
 &nbsp;&nbsp;&nbsp;*Drinking*                              ||
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non-Heavy Drinker           | 1 (Baseline Factor)     |
@@ -234,7 +234,7 @@ on the probability of having had a stroke is shown in Figure 2. The
 probability of a person having a stroke increases with the number of days a
 person is significantly affected by anxiety. This probability is multiplied if
 a person has been diagnosed with depression. For non-smokers with no depression
-diagnosis who did not signifantly suffer from anxiety, the probability of having
+diagnosis who did not significantly suffer from anxiety, the probability of having
 had a stroke approaches zero. If the same subject was diagnosed with depression,
 the probability of having had a stroke nears 5%. 
 
@@ -243,7 +243,7 @@ at approximately 5% for daily smokers who have not been diagnosed with
 depression nor have suffered from significant anxiety. With a depression
 diagnosis, the probability originates at approximately 7% for subjects with zero
 days of anxiety and increases to 15% for subjects who experienced thirty days of
-signiticant anxiety. This relationship is similar for subjects who currently
+significant anxiety. This relationship is similar for subjects who currently
 smoke some days.
 
 ``` {r figWithCaption2, fig.cap="Effects of Anxious Days on Stroke Outcome, Stratified by Depression Diagnosis and Smoker Status", echo=F}
@@ -262,4 +262,4 @@ One limitation of this study is its cross-sectional design. Because stroke preva
 
 Another limitation in our study is the possibility of biases inherent in any prevalence study. Subjects may not always be forthcoming when answering questions about unhealthy behaviors such as, "during the past 30 days, how many days per week or per month did you have at least one drink of any alcoholic beverage..." or "... During the past 30 days, on the days when you drank, how many drinks did you drink on the average?" Questions involving mental health may also invoke in the subject the same desire to "save face."
 
-Reducing the incidence of stroke is an important goal of public health that would result in a vast reduction of the health care burden. Our findings provide researchers and policymakers a set of variables that should be further investigated in order to elucidate causitive relationships that may occur between these risk factors and stroke outcome. Future studies should look further at the effect of mental health diagnosis on stroke odds, as well as how smoking can increase an individual’s odds of a stroke. 
+Reducing the incidence of stroke is an important goal of public health that would result in a vast reduction of the health care burden. Our findings provide researchers and policymakers a set of variables that should be further investigated in order to elucidate causative relationships that may occur between these risk factors and stroke outcome. Future studies should look further at the effect of mental health diagnosis on stroke odds, as well as how smoking can increase an individual’s odds of a stroke. 
