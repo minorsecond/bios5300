@@ -1,4 +1,5 @@
 \documentclass[11pt,]{article}
+\usepackage{float}
 \usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
 \newcommand*{\authorfont}{\fontfamily{phv}\selectfont}
 \usepackage[]{mathptmx}
@@ -192,9 +193,8 @@ depression diagnosis.
 
 \vskip 6.5pt
 
-
-\noindent  \hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\doublespacing
+\noindent  \section{Introduction}\label{introduction}
 
 Strokes nearly affect 800,000 people in the United States every year and
 are the fifth leading cause of death in the United States
@@ -236,8 +236,7 @@ cellphones. It is in partnership with the CDC and has been useful for
 providing large quantities of health related data
 \citep{CentersforDiseaseControlandPrevention2014}.
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
 The BRFSS survey data were weighted using the raking method, which is a
 two-part methodology to help insure unbiased results by accounting for
@@ -248,9 +247,8 @@ repeatedly adjusting weight across a set of selected variables until the
 weights converge and the survey population totals are equal to the
 census population totals for each selected variable \citep{Fricker1993}.
 
-\hypertarget{dependent-and-independent-variables}{%
 \subsection{Dependent and Independent
-Variables}\label{dependent-and-independent-variables}}
+Variables}\label{dependent-and-independent-variables}
 
 The dependent variable, stroke outcome, was recoded to a binary variable
 for use in a logistic regression model. Depression diagnosis and heavy
@@ -291,8 +289,7 @@ month did you have at least one drink of any alcoholic beverage such as
 beer, wine, a malt beverage or liquor?''
 \citep{CentersforDiseaseControlandPrevention2007}.
 
-\hypertarget{logistic-regression-model}{%
-\subsection{Logistic Regression Model}\label{logistic-regression-model}}
+\subsection{Logistic Regression Model}\label{logistic-regression-model}
 
 The first model used in calculating the logistic regression utilized the
 standard binomial function to predict the log odds of binary outcome
@@ -303,8 +300,7 @@ that a stroke will occur. The results of the logistic regression model
 were then exponentiated to produce the odds ratios (OR) reported within
 this paper.
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
 The weighted number of strokes in the United States in 2016 was
 8,020,080, representing approximately 2.5\% of the total 2016 United
@@ -374,7 +370,21 @@ independent from one another, \(\chi^2\) (3, \(N\)=486,303) = 2352.5,
 \(p <\) 0.001.
 
 The mean hours of sleep for those who had a stroke was 6.99 hours and
-6.98 for those who did not have a stroke.
+6.98 for those who did not have a stroke. Though the difference in
+average hours of sleep was small, approximately 6 seconds, the
+difference nearly achieved statistical significance at \(\alpha=0.05\)
+with a p-value of 0.06.
+
+Using the Tukey method, where observations greater or less than the sum
+of the median plus or minux 1.5 times the IQR marked as outliers, we
+noted that there were a large number of outliers in the reported number
+of alcoholic drinks weekly. There were 69,934 observations that were
+marked as outliers, amounting to 18.1\% of the pre-weighted data. The
+mean of the outliers was 1,465.8 drinks weekly. The mean number of
+alcoholic drinks consumed weekly, including outliers, was 1,465.8 drinks
+weekly, and 72.83 drinks weekly with the outliers removed. It is unclear
+if the CDC accounted for these outliers when calculating the \emph{heavy
+drinker} variable.
 
 \begin{longtable}[]{@{}lll@{}}
 \caption{Mean Values of Selected Risk Factors}\tabularnewline
@@ -390,14 +400,16 @@ Days Anxious & No Stroke & 4.79\tabularnewline
 & Stroke & 8.05\tabularnewline
 Nightly Sleep Hours & No Stroke & 6.98\tabularnewline
 & Stroke & 6.99\tabularnewline
-Number Drinks Weekly & No Stroke & 79.07\tabularnewline
+Number Drinks Weekly, With Outliers & No Stroke & 314.12\tabularnewline
+& Stroke & 267.97\tabularnewline
+Number Drinks Weekly, Outliers Removed & No Stroke &
+79.07\tabularnewline
 & Stroke & 40.31\tabularnewline
 \bottomrule
 \end{longtable}
 
-\hypertarget{logistic-regression-model-1}{%
 \subsection{Logistic Regression
-Model}\label{logistic-regression-model-1}}
+Model}\label{logistic-regression-model-1}
 
 The binomial logistic regression model resulted in a \(\phi\) value of
 2.52, indicating that there is overdispersion in the estimates and the
@@ -443,7 +455,7 @@ Variable & OR (95\% CI) & P-Value\tabularnewline
 ~~~~~No Depression Diagnosis & 1 (Baseline Factor) &\tabularnewline
 ~~~~~Depression Diagnosis & 2.12 (1.48 - 3.04) &
 \textless{}0.01\tabularnewline
-~~~~~Daily Sleep Hours & 0.91 (0.82 - 1.00) & 0.06\tabularnewline
+~~~~~Nightly Sleep Hours & 0.91 (0.82 - 1.00) & 0.06\tabularnewline
 ~~~\emph{Sex} & &\tabularnewline
 ~~~~~Male & 1 (Baseline Factor) &\tabularnewline
 ~~~~~Female & 0.77 (0.58 - 1.02) & 0.07\tabularnewline
@@ -489,8 +501,7 @@ relationship is similar for subjects who currently smoke some days.
 Depression Diagnosis and Smoker Status}
 \end{figure}
 
-\hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{Conclusion}\label{conclusion}
 
 Our study assessed the association between heavy drinking, anxiety,
 depression on stroke odds. Using the 2016 Behavioral Risk Factor
@@ -519,6 +530,10 @@ drink of any alcoholic beverage\ldots{}'' or ``\ldots{} During the past
 30 days, on the days when you drank, how many drinks did you drink on
 the average?'' Questions involving mental health may also invoke in the
 subject the same desire to ``save face.''
+
+Finally, there were clearly outliers in the reported weekly number of
+alcohol drinks. It is unclear whether or not the CDC accounted for
+outliers in their calculation of heavy drinker status, but
 
 Reducing the incidence of stroke is an important goal of public health
 that would result in a vast reduction of the health care burden. Our
